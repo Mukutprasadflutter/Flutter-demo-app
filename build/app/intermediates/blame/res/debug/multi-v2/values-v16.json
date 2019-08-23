@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "/var/www/html/start_flutter_app/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-v16/values-v16.xml",
+            "map": [
+                {
+                    "source": "/home/mukutprasad/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/10c58f897bc4cde0e52c2a59204d852d/res/values-v16/values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "65",
+                        "endOffsets": "116"
+                    }
+                }
+            ]
+        }
+    ]
+}
