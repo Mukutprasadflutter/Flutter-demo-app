@@ -21,7 +21,8 @@ class LandingDetailScreen extends StatefulWidget {
 
 class LandingDetail extends State<LandingDetailScreen> {
   String feedId = "";
-  FeedDetail feedDetail;
+  bool apiCall = false;
+  FeedDetail feedDetail = new FeedDetail();
 
   LandingDetail(String id) {
     feedId = id;
@@ -42,7 +43,8 @@ class LandingDetail extends State<LandingDetailScreen> {
     int statusCode = response.statusCode;
     if (statusCode == 200) {
       setState(() {
-        feedDetail = json.decode(response.body) as FeedDetail;
+        feedDetail = FeedDetail.fromJson(json.decode(response.body));
+        apiCall = true;
       });
     }
   }
@@ -51,12 +53,13 @@ class LandingDetail extends State<LandingDetailScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
       body: new Container(
+        alignment: Alignment.center,
         decoration: new BoxDecoration(
           image: new DecorationImage(
               image: new AssetImage("assets/images/ic_background.jpg"),
               fit: BoxFit.cover),
         ),
-        child: _getItemUI(context),
+        child: apiCall ? _getItemUI(context) : Text(""),
       ),
     );
   }
@@ -64,31 +67,44 @@ class LandingDetail extends State<LandingDetailScreen> {
   Widget _getItemUI(BuildContext context) {
     return new Card(
         child: new Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         new CachedNetworkImage(
           width: double.infinity,
           fit: BoxFit.cover,
-          height: 220,
-          imageUrl: feedDetail.photo,
+          height: 400,
+          imageUrl: feedDetail.photo == null ? "" : feedDetail.photo,
           placeholder: (context, url) =>
               new Image.asset('assets/images/image.png'),
           errorWidget: (context, url, error) => new Icon(Icons.error),
         ),
-        new ListTile(
-          leading: new Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              new Text(feedDetail.name,
-                  style: new TextStyle(
-                      fontSize: 20.0, fontWeight: FontWeight.bold)),
-              new Text(feedDetail.firstName + " " + feedDetail.lastName,
-                  style: new TextStyle(
-                      fontSize: 15.0, fontWeight: FontWeight.normal))
-            ],
-          ),
-          onTap: () {},
-        ),
+        new Text(feedDetail.name != null ? feedDetail.name : "",
+            style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+        new Text(
+            feedDetail.firstName == null
+                ? ""
+                : feedDetail.firstName + " " + feedDetail.lastName == null
+                    ? ""
+                    : feedDetail.lastName,
+            style:
+                new TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal)),
+        new Text(feedDetail.complexity == null ? "" : feedDetail.complexity,
+            style: new TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal))
+        /*feedDetail.ingredients != null
+            ? new ListView.builder(
+                itemCount: feedDetail.ingredients.length,
+                itemBuilder: (context, index) {
+                  return Text(feedDetail.ingredients[index].ingredient);
+                })
+            : new Text(""),*/
+        /*feedDetail.instructions != null
+            ? new ListView.builder(
+                itemCount: feedDetail.instructions.length,
+                itemBuilder: (context, index) {
+                  return Text(feedDetail.instructions[index].instruction);
+                })
+            : Text("")*/
       ],
     ));
   }

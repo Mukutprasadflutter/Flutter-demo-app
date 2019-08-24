@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:TeamDebug/detail/FeedDetail.dart';
+import 'package:TeamDebug/detail/LandingDetail.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +80,11 @@ class Landing extends State<LandingScreen> {
           )
           ,
           onTap: () {
-            _showSnackBar(context, feeds[index]);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LandingDetailScreen("1")),
+            );
+            //_showSnackBar(context, feeds[index]);
           },
         ),
       ],
