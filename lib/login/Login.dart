@@ -25,9 +25,8 @@ class _Login extends State<Login> {
     var loginBtn = new SizedBox(
         width: double.infinity,
         child: new Container(
-            margin: EdgeInsets.all(10),
             child: new RaisedButton(
-              onPressed: _submit,
+              onPressed:() => _submit(context),
               textColor: Colors.white,
               child: new Text("LOGIN"),
               color: Colors.black54,
@@ -71,9 +70,19 @@ class _Login extends State<Login> {
             ],
           ),
         ),
-        _isLoading ? new CircularProgressIndicator() : loginBtn
+        new Container(
+          margin: EdgeInsets.all(10),
+          child:  _isLoading ? new SizedBox(
+            child: new CircularProgressIndicator(
+                valueColor: new AlwaysStoppedAnimation(Colors.blue),
+                strokeWidth: 3.0),
+            height: 20.0,
+            width: 20.0,) : loginBtn,
+        )
+
       ],
       crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
     );
 
     return new Scaffold(
@@ -103,7 +112,7 @@ class _Login extends State<Login> {
     );
   }
 
-  Future _submit() async {
+  Future _submit(BuildContext context) async {
     setState(() {
       _isLoading = true;
     });
@@ -117,8 +126,8 @@ class _Login extends State<Login> {
     Response response = await post(LOGIN_API, headers: headers, body: jsonReq);
     int statusCode = response.statusCode;
     String body = response.body;
+    Map data = json.decode(body);
     if (statusCode == 200) {
-      Map data = json.decode(body);
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('token', data['token'].toString());
       _isLoading = false;
@@ -126,6 +135,20 @@ class _Login extends State<Login> {
         context,
         MaterialPageRoute(builder: (context) => LandingScreen()),
       );
+    }else{
+      setState(() {
+        _isLoading = false;
+      });
+      _showSnackBar(context,data['error'].toString());
     }
+  }
+
+  _showSnackBar(BuildContext context, String message) {
+    final SnackBar objSnackbar = new SnackBar(
+      content: new Text("$message"),
+      backgroundColor: Colors.black,
+    );
+
+    scaffoldKey.currentState.showSnackBar(objSnackbar);
   }
 }

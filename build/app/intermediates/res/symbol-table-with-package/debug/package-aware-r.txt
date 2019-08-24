@@ -1,4 +1,4 @@
-comcc.example.flutter_appcc
+com.example.my_receipe
 drawable launch_background
 mipmap ic_launcher
 style LaunchTheme

@@ -12,7 +12,7 @@ INJECTED from G:\Work\Flutter\MyRecipes\android\app\src\debug\AndroidManifest.xm
 INJECTED from G:\Work\Flutter\MyRecipes\android\app\src\debug\AndroidManifest.xml:1:1-7:12
 INJECTED from G:\Work\Flutter\MyRecipes\android\app\src\debug\AndroidManifest.xml:1:1-7:12
 	package
-		ADDED from G:\Work\Flutter\MyRecipes\android\app\src\main\AndroidManifest.xml:2:5-42
+		ADDED from G:\Work\Flutter\MyRecipes\android\app\src\main\AndroidManifest.xml:2:5-37
 		INJECTED from G:\Work\Flutter\MyRecipes\android\app\src\main\AndroidManifest.xml
 		INJECTED from G:\Work\Flutter\MyRecipes\android\app\src\debug\AndroidManifest.xml
 	android:versionName
@@ -28,12 +28,12 @@ INJECTED from G:\Work\Flutter\MyRecipes\android\app\src\debug\AndroidManifest.xm
 application
 ADDED from G:\Work\Flutter\MyRecipes\android\app\src\main\AndroidManifest.xml:9:5-32:19
 	android:label
-		ADDED from G:\Work\Flutter\MyRecipes\android\app\src\main\AndroidManifest.xml:11:9-38
+		ADDED from G:\Work\Flutter\MyRecipes\android\app\src\main\AndroidManifest.xml:11:9-35
 	android:icon
 		ADDED from G:\Work\Flutter\MyRecipes\android\app\src\main\AndroidManifest.xml:12:9-43
 	android:name
 		ADDED from G:\Work\Flutter\MyRecipes\android\app\src\main\AndroidManifest.xml:10:9-57
-activity#comcc.example.flutter_appcc.MainActivity
+activity#com.example.my_receipe.MainActivity
 ADDED from G:\Work\Flutter\MyRecipes\android\app\src\main\AndroidManifest.xml:13:9-31:20
 	android:launchMode
 		ADDED from G:\Work\Flutter\MyRecipes\android\app\src\main\AndroidManifest.xml:15:13-43
