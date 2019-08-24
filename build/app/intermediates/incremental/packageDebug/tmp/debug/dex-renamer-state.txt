@@ -1,4 +1,4 @@
-#Tue Jul 30 19:37:17 IST 2019
-base.0=/var/www/html/start_flutter_app/build/app/intermediates/transforms/dexMerger/debug/0
+#Sat Aug 24 12:09:55 IST 2019
+base.0=G\:\\Work\\Flutter\\MyRecipes\\build\\app\\intermediates\\transforms\\dexMerger\\debug\\0
 path.0=classes.dex
 renamed.0=classes.dex

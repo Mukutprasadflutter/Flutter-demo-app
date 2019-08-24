@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:start_flutter_app/services/authentication.dart';
-import 'package:start_flutter_app/pages/root_page.dart';
+import 'package:TeamDebug/splash/Splash.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,12 +8,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Crud operation with firebase',
+      title: 'TeamDebug',
       debugShowCheckedModeBanner: false,
-      theme: new ThemeData(
-        primarySwatch: Colors.indigo
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
-      home: new RootPage(auth: new Auth())
+      home: SplashScreen(),
     );
   }
 }
+/*
+
+
+*/
