@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'package:TeamDebug/Landing/FeedModel.dart';
+
+import 'package:TeamDebug/Constant/Constant.dart';
 import 'package:TeamDebug/detail/FeedDetail.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:TeamDebug/Constant/Constant.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -52,60 +52,73 @@ class LandingDetail extends State<LandingDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body: new Container(
-        alignment: Alignment.center,
-        decoration: new BoxDecoration(
-          image: new DecorationImage(
-              image: new AssetImage("assets/images/ic_background.jpg"),
-              fit: BoxFit.cover),
-        ),
-        child: apiCall ? _getItemUI(context) : Text(""),
+      body: Stack(
+        children: <Widget>[
+          Container(
+              height: double.infinity,
+              decoration: new BoxDecoration(
+                image: new DecorationImage(
+                    image: new AssetImage("assets/images/ic_background.jpg"),
+                    fit: BoxFit.cover),
+              )),
+          Container(
+            child: apiCall ? _getItemUI(context) : Text(""),
+          ),
+        ],
       ),
     );
   }
 
   Widget _getItemUI(BuildContext context) {
     return new Card(
-        child: new Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        new CachedNetworkImage(
-          width: double.infinity,
-          fit: BoxFit.cover,
-          height: 400,
-          imageUrl: feedDetail.photo == null ? "" : feedDetail.photo,
-          placeholder: (context, url) =>
-              new Image.asset('assets/images/image.png'),
-          errorWidget: (context, url, error) => new Icon(Icons.error),
-        ),
-        new Text(feedDetail.name != null ? feedDetail.name : "",
-            style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
-        new Text(
-            feedDetail.firstName == null
-                ? ""
-                : feedDetail.firstName + " " + feedDetail.lastName == null
-                    ? ""
-                    : feedDetail.lastName,
-            style:
-                new TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal)),
-        new Text(feedDetail.complexity == null ? "" : feedDetail.complexity,
-            style: new TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal))
-        /*feedDetail.ingredients != null
-            ? new ListView.builder(
-                itemCount: feedDetail.ingredients.length,
-                itemBuilder: (context, index) {
-                  return Text(feedDetail.ingredients[index].ingredient);
-                })
-            : new Text(""),*/
-        /*feedDetail.instructions != null
-            ? new ListView.builder(
-                itemCount: feedDetail.instructions.length,
-                itemBuilder: (context, index) {
-                  return Text(feedDetail.instructions[index].instruction);
-                })
-            : Text("")*/
-      ],
+        child: SingleChildScrollView(
+      child: new Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          new CachedNetworkImage(
+            width: double.infinity,
+            fit: BoxFit.cover,
+            height: 400,
+            imageUrl: feedDetail.photo == null ? "" : feedDetail.photo,
+            placeholder: (context, url) =>
+                new Image.asset('assets/images/image.png'),
+            errorWidget: (context, url, error) => new Icon(Icons.error),
+          ),
+          new Text(feedDetail.name != null ? feedDetail.name : "",
+              style:
+                  new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+          new Text(
+              feedDetail.firstName == null
+                  ? ""
+                  : feedDetail.firstName + " " + feedDetail.lastName == null
+                      ? ""
+                      : feedDetail.lastName,
+              style:
+                  new TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal)),
+          new Text(feedDetail.complexity == null ? "" : feedDetail.complexity,
+              style:
+                  new TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal)),
+          Container(
+              child: Column(
+            children: <Widget>[
+              ...feedDetail.ingredients.map((item) {
+                return Text(item.ingredient);
+              })
+            ],
+          )),
+          Container(
+            height: 200,
+            child: feedDetail.instructions != null
+                ? new ListView.builder(
+                    itemCount: feedDetail.instructions.length,
+                    itemBuilder: (context, index) {
+                      return Text(feedDetail.instructions[index].instruction);
+                    })
+                : Text(""),
+          )
+        ],
+      ),
     ));
   }
 }
