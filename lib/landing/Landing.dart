@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:TeamDebug/createRecipes/CreateRecipeScreen.dart';
 import 'package:TeamDebug/detail/FeedDetail.dart';
 import 'package:TeamDebug/detail/LandingDetail.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -40,49 +41,63 @@ class Landing extends State<LandingScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        body: new Container(
-            decoration: new BoxDecoration(
-              image: new DecorationImage(
-                  image: new AssetImage("assets/images/ic_background.jpg"),
-                  fit: BoxFit.cover),
-            ),
-            child: new ListView.builder(
-                itemCount: feeds.length,
-                itemBuilder: (context, index) {
-                  return ListTile(title: _getItemUI(context, index));
-                })));
+      appBar: new AppBar(
+        title: new Text(
+          'Recipes',
+          style: new TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 5.0,
+      ),
+      body: SingleChildScrollView(
+          child: Container(
+              child: Column(
+          children: <Widget>[
+              ...feeds.map((item) {
+              return _getItemUI(context, item);
+          })
+        ],
+      ))),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => CreateRecipeScreen()));
+        },
+        child: Icon(Icons.add,),
+        backgroundColor: Colors.pink,
+      ),
+    );
   }
 
-  Widget _getItemUI(BuildContext context, int index) {
+  Widget _getItemUI(BuildContext context, FeedModel feedModel) {
     return new Card(
         child: new Column(
-          children: <Widget>[
+      children: <Widget>[
         new CachedNetworkImage(
           width: double.infinity,
           fit: BoxFit.cover,
-          height: 220,
-          imageUrl: feeds[index].photo,
-          placeholder: (context, url) =>
-              new Image.asset('assets/images/image.png'),
-          errorWidget: (context, url, error) => new Icon(Icons.error),
+          height: 300,
+          imageUrl: feedModel.photo,
+          placeholder: (context, url) => new Image.asset('assets/images/image.png'),
+          /*errorWidget: (context, url, error) => new Icon(Icons.error)*/
         ),
         new ListTile(
-          leading:new Column(
+          leading: new Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              new Text(feeds[index].name,
-                  style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
-              new Text(feeds[index].firstName + " " + feeds[index].lastName,
-                  style: new TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal))
-
+              new Text(feedModel.name,
+                  style: new TextStyle(
+                      fontSize: 20.0, fontWeight: FontWeight.bold)),
+              new Text(feedModel.firstName + " " + feedModel.lastName,
+                  style: new TextStyle(
+                      fontSize: 15.0, fontWeight: FontWeight.normal))
             ],
-          )
-          ,
+          ),
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => LandingDetailScreen(feeds[index].recipeId)),
+            Navigator.push(context, MaterialPageRoute(builder: (context) => LandingDetailScreen(feedModel.recipeId)),
             );
             //_showSnackBar(context, feeds[index]);
           },
@@ -96,7 +111,6 @@ class Landing extends State<LandingScreen> {
       content: new Text("${item.name}"),
       backgroundColor: Colors.black,
     );
-
     Scaffold.of(context).showSnackBar(objSnackbar);
   }
 }

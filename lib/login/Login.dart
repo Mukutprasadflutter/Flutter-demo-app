@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:ui';
-import 'package:flutter/material.dart';
+
 import 'package:TeamDebug/Constant/Constant.dart';
 import 'package:TeamDebug/Landing/Landing.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,8 +16,9 @@ class _Login extends State<Login> {
   BuildContext _ctx;
   bool _isLoading = false;
   final formKey = new GlobalKey<FormState>();
+  var _password = TextEditingController(text: "jay@123");
+  var _username = TextEditingController(text: "jm1@example.com");
   final scaffoldKey = new GlobalKey<ScaffoldState>();
-  String _password = "jay@123", _username = "jm1@example.com";
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +27,11 @@ class _Login extends State<Login> {
         width: double.infinity,
         child: new Container(
             child: new RaisedButton(
-              onPressed:() => _submit(context),
-              textColor: Colors.white,
-              child: new Text("LOGIN"),
-              color: Colors.black54,
-            )));
+          onPressed: () => _submit(context),
+          textColor: Colors.white,
+          child: new Text("LOGIN"),
+          color: Colors.black54,
+        )));
     var loginForm = new Column(
       children: <Widget>[
         new Container(
@@ -48,8 +49,7 @@ class _Login extends State<Login> {
               new Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: new TextFormField(
-                  onChanged: (val) => _username = val,
-                  initialValue: _username,
+                  controller: _username,
                   validator: (val) {
                     return val.length < 10
                         ? "Username must have atleast 10 chars"
@@ -62,8 +62,7 @@ class _Login extends State<Login> {
                 padding: const EdgeInsets.all(8.0),
                 child: new TextFormField(
                   obscureText: true,
-                  initialValue: _password,
-                  onChanged: (val) => _password = val,
+                  controller: _password,
                   decoration: new InputDecoration(labelText: "Password"),
                 ),
               ),
@@ -72,14 +71,16 @@ class _Login extends State<Login> {
         ),
         new Container(
           margin: EdgeInsets.all(10),
-          child:  _isLoading ? new SizedBox(
-            child: new CircularProgressIndicator(
-                valueColor: new AlwaysStoppedAnimation(Colors.blue),
-                strokeWidth: 3.0),
-            height: 20.0,
-            width: 20.0,) : loginBtn,
+          child: _isLoading
+              ? new SizedBox(
+                  child: new CircularProgressIndicator(
+                      valueColor: new AlwaysStoppedAnimation(Colors.blue),
+                      strokeWidth: 3.0),
+                  height: 20.0,
+                  width: 20.0,
+                )
+              : loginBtn,
         )
-
       ],
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -119,9 +120,9 @@ class _Login extends State<Login> {
 
     Map<String, String> headers = {"Content-type": "application/json"};
     String jsonReq = "{\"email\": \"" +
-        _username +
+        _username.text +
         "\", \"password\": \"" +
-        _password +
+        _password.text +
         "\"}";
     Response response = await post(LOGIN_API, headers: headers, body: jsonReq);
     int statusCode = response.statusCode;
@@ -135,11 +136,11 @@ class _Login extends State<Login> {
         context,
         MaterialPageRoute(builder: (context) => LandingScreen()),
       );
-    }else{
+    } else {
       setState(() {
         _isLoading = false;
       });
-      _showSnackBar(context,data['error'].toString());
+      _showSnackBar(context, data['error'].toString());
     }
   }
 
