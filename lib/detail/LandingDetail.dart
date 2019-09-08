@@ -9,9 +9,9 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LandingDetailScreen extends StatefulWidget {
-  String feedId = "";
+  int feedId = 0;
 
-  LandingDetailScreen(String id) {
+  LandingDetailScreen(int id) {
     feedId = id;
   }
 
@@ -20,11 +20,11 @@ class LandingDetailScreen extends StatefulWidget {
 }
 
 class LandingDetail extends State<LandingDetailScreen> {
-  String feedId = "";
+  int feedId = 0;
   bool apiCall = false;
   FeedDetail feedDetail = new FeedDetail();
 
-  LandingDetail(String id) {
+  LandingDetail(int id) {
     feedId = id;
   }
 
@@ -39,7 +39,7 @@ class LandingDetail extends State<LandingDetailScreen> {
     final token = prefs.getString('token') ?? "";
     Map<String, String> headers = {"Authorization": "Bearer " + token};
     Response response =
-        await get(FEED_DETAIL_API + feedId + "/detailS", headers: headers);
+        await get(FEED_DETAIL_API + feedId.toString() + "/detailS", headers: headers);
     int statusCode = response.statusCode;
     if (statusCode == 200) {
       setState(() {
@@ -52,19 +52,38 @@ class LandingDetail extends State<LandingDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body: new Container(
-        alignment: Alignment.center,
-        decoration: new BoxDecoration(
-          image: new DecorationImage(
-              image: new AssetImage("assets/images/ic_background.jpg"),
-              fit: BoxFit.cover),
-        ),
-        child: apiCall ? _getItemUI(context) : Text(""),
-      ),
-    );
+        body: new Container(
+            decoration: new BoxDecoration(
+              image: new DecorationImage(
+                  image: new AssetImage("assets/images/ic_background.jpg"),
+                  fit: BoxFit.cover),
+            ),
+            child: new ListView.builder(
+                itemCount: feedDetail.instructions.length,
+                itemBuilder: (context, index) {
+                  return ListTile(title: _getItemUI(context, index));
+                })));
   }
 
-  Widget _getItemUI(BuildContext context) {
+  Widget _getItemUI(BuildContext context, int index) {
+    return new Card(
+        child: new Column(
+          children: <Widget>[
+            new ListTile(
+              leading:new Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  new Text(feedDetail.instructions[index].instruction,
+                      style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+                ],
+              )
+            ),
+          ],
+        ));
+  }
+
+  Widget _getItemUIMM(BuildContext context) {
     return new Card(
         child: new Column(
       mainAxisAlignment: MainAxisAlignment.start,

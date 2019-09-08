@@ -82,7 +82,7 @@ class Landing extends State<LandingScreen> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => LandingDetailScreen("1")),
+              MaterialPageRoute(builder: (context) => LandingDetailScreen(feeds[index].recipeId)),
             );
             //_showSnackBar(context, feeds[index]);
           },

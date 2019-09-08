@@ -6,8 +6,9 @@ class FeedModel {
     String photo;
     String preparationTime;
     String serves;
+    int recipeId;
 
-    FeedModel({this.complexity, this.firstName, this.lastName, this.name, this.photo, this.preparationTime, this.serves});
+    FeedModel({this.complexity, this.firstName, this.lastName, this.name, this.photo, this.preparationTime, this.serves, this.recipeId});
 
     factory FeedModel.fromJson(Map<String, dynamic> json) {
         return FeedModel(
@@ -17,7 +18,8 @@ class FeedModel {
             name: json['name'], 
             photo: json['photo'] != null ? (json['photo']) : "",
             preparationTime: json['preparationTime'], 
-            serves: json['serves'], 
+            serves: json['serves'],
+            recipeId: json['recipeId']
         );
     }
 
@@ -29,6 +31,7 @@ class FeedModel {
         data['name'] = this.name;
         data['preparationTime'] = this.preparationTime;
         data['serves'] = this.serves;
+        data['recipeId'] = this.recipeId;
         if (this.photo != null) {
             data['photo'] = this.photo;
         }
