@@ -57,11 +57,11 @@ class LandingDetail extends State<LandingDetailScreen> {
         title: new Text(
           'Details',
           style: new TextStyle(
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.amber,
+        automaticallyImplyLeading: true,
         elevation: 5.0,
       ),
       body: Container(
@@ -77,41 +77,65 @@ class LandingDetail extends State<LandingDetailScreen> {
 
   Widget _getItemUIMM(BuildContext context) {
     return new Container(
-      width: double.infinity,
+        width: double.infinity,
         child: SingleChildScrollView(
-      child: new Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          new CachedNetworkImage(
-              width: double.infinity,
-              fit: BoxFit.cover,
-              height: 300,
-              imageUrl: feedDetail.photo == null ? "" : feedDetail.photo,
-              placeholder: (context, url) =>
-                  new Image.asset('assets/images/image.png')),
-          new Text(feedDetail.name != null ? feedDetail.name : "",
-              style:
-                  new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
-          new Text(
-              feedDetail.firstName == null
-                  ? ""
-                  : feedDetail.firstName + " " + feedDetail.lastName == null
+          padding: EdgeInsets.all(10),
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                width:double.infinity,
+               height: 200,
+               child: CachedNetworkImage(
+                   width: double.infinity,
+                   fit: BoxFit.cover,
+                   height: 150,
+                   imageUrl: feedDetail.photo == null ? "" : feedDetail.photo,
+                   placeholder: (context, url) =>
+                   new Image.asset('assets/images/image.png')),
+              ),
+
+              Row (
+                children: <Widget>[
+                  Text(feedDetail.name != null ? feedDetail.name : "",
+                      style: new TextStyle(
+                          fontSize: 20.0, fontWeight: FontWeight.bold)),
+                ],
+              ),
+              new Text(
+                  feedDetail.firstName == null
                       ? ""
-                      : feedDetail.lastName,
-              style:
-                  new TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal)),
-          new Text(feedDetail.complexity == null ? "" : feedDetail.complexity,
-              style: new TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal)),
-          /*new Container(
-              child: Column(
-            children: feedDetail.ingredients!=null?<Widget>[
-              ...feedDetail.ingredients.map((item) {
-                return Text(item.ingredient);
-              })
-            ]:Text(""),
-          )),*/
-          new Container(
+                      : feedDetail.firstName + " " + feedDetail.lastName == null
+                          ? ""
+                          : feedDetail.lastName,
+                  style: new TextStyle(
+                      fontSize: 15.0, fontWeight: FontWeight.normal)),
+              new Text(
+                  feedDetail.complexity == null ? "" : feedDetail.complexity,
+                  style: new TextStyle(
+                      fontSize: 15.0, fontWeight: FontWeight.normal)),
+              new Container(
+                  child: Column(
+                children: feedDetail.ingredients != null
+                    ? <Widget>[
+                        ...feedDetail.ingredients.map((item) {
+                          return Text(item.ingredient);
+                        })
+                      ]
+                    : <Widget>[Text("")],
+              )),
+              new Container(
+                  child: Column(
+                children: feedDetail.instructions != null
+                    ? <Widget>[
+                        ...feedDetail.instructions.map((item) {
+                          return Text(item.instruction);
+                        })
+                      ]
+                    : <Widget>[Text("")],
+              )),
+              /*new Container(
             height: 200,
             width: double.infinity,
             child: feedDetail.ingredients != null
@@ -120,20 +144,21 @@ class LandingDetail extends State<LandingDetailScreen> {
                 itemBuilder: (context, index) {
                   return Text(feedDetail.ingredients[index].ingredient);
                 })
-                : Text("")),
-          new Container(
-            height: 200,
-            width: double.infinity,
-            child: feedDetail.instructions != null
-                ? new ListView.builder(
-                    itemCount: feedDetail.instructions.length,
-                    itemBuilder: (context, index) {
-                      return Text(feedDetail.instructions[index].instruction);
-                    })
-                : Text(""),
-          )
-        ],
-      ),
-    ));
+                : Text("")),*/
+              /*new Container(
+                height: 200,
+                width: double.infinity,
+                child: feedDetail.instructions != null
+                    ? new ListView.builder(
+                        itemCount: feedDetail.instructions.length,
+                        itemBuilder: (context, index) {
+                          return Text(
+                              feedDetail.instructions[index].instruction);
+                        })
+                    : Text(""),
+              )*/
+            ],
+          ),
+        ));
   }
 }

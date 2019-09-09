@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:TeamDebug/constant/Constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +51,10 @@ class CreateRecipe extends State<CreateRecipeScreen> {
     if (statusCode == 200) {
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('token', data['token'].toString());
-      _isLoading = false;
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.pop(context, true);
     } else {
       setState(() {
         _isLoading = false;
@@ -72,70 +76,84 @@ class CreateRecipe extends State<CreateRecipeScreen> {
     var createRecepe = new SizedBox(
         width: double.infinity,
         child: new Container(
+            height: 50,
             child: new RaisedButton(
-          onPressed: () => _createRecipeRequest(context),
-          textColor: Colors.white,
-          child: new Text("CREATE"),
-          color: Colors.black54,
-        )));
+              onPressed: () => _createRecipeRequest(context),
+              textColor: Colors.white,
+              child: new Text("CREATE"),
+              color: Colors.amber,
+            )));
     return new Scaffold(
       key: scaffoldKey,
       appBar: new AppBar(
         title: new Text(
           'Create Recipes',
           style: new TextStyle(
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
+        automaticallyImplyLeading: true,
+        backgroundColor: Colors.amber,
         elevation: 5.0,
       ),
-      body: new Form(
-        child: new Column(
-          children: <Widget>[
-            new Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: new TextFormField(
-                controller: _name,
-                decoration: new InputDecoration(labelText: "Name"),
-              ),
+      body:Container(
+        height: double.infinity,
+        color: Colors.white,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Container(
+            decoration: BoxDecoration(color: Colors.white),
+            child: new Column(
+              children: <Widget>[
+                new Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: new TextFormField(
+                    controller: _name,
+                    decoration: new InputDecoration(labelText: "Name"),
+                  ),
+                ),
+                new Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: new TextFormField(
+                    controller: _preparationTime,
+                    decoration:
+                    new InputDecoration(labelText: "Preparation Time"),
+                  ),
+                ),
+                new Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: new TextFormField(
+                    controller: _serves,
+                    decoration: new InputDecoration(labelText: "Serves"),
+                  ),
+                ),
+                new Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: new TextFormField(
+                    controller: _complexity,
+                    decoration: new InputDecoration(labelText: "Complexity"),
+                  ),
+                ),
+                new Container(
+                    margin: EdgeInsets.all(10),
+                    child: _isLoading
+                        ? new Container(
+                      height: 50,
+                      width: 50,
+                      padding: EdgeInsets.all(12),
+                      child: new Container(
+                        child: new CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation(Colors.blue), strokeWidth: 3.0),
+                        height: 20,
+                        width: 20,
+                      ),
+                    )
+                        : createRecepe)
+              ],
             ),
-            new Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: new TextFormField(
-                controller: _preparationTime,
-                decoration: new InputDecoration(labelText: "Preparation Time"),
-              ),
-            ),
-            new Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: new TextFormField(
-                controller: _serves,
-                decoration: new InputDecoration(labelText: "Serves"),
-              ),
-            ),
-            new Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: new TextFormField(
-                controller: _complexity,
-                decoration: new InputDecoration(labelText: "Complexity"),
-              ),
-            ),
-            new Container(
-                margin: EdgeInsets.all(10),
-                child: _isLoading
-                    ? new SizedBox(
-                        child: new CircularProgressIndicator(
-                            valueColor: new AlwaysStoppedAnimation(Colors.blue),
-                            strokeWidth: 3.0),
-                        height: 20.0,
-                        width: 20.0,
-                      )
-                    : createRecepe)
-          ],
+          ),
         ),
-      ),
+      )
+
     );
   }
 }

@@ -1,13 +1,14 @@
 import 'dart:convert';
+
+import 'package:TeamDebug/constant/Constant.dart';
 import 'package:TeamDebug/createRecipes/CreateRecipeScreen.dart';
-import 'package:TeamDebug/detail/FeedDetail.dart';
 import 'package:TeamDebug/detail/LandingDetail.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:TeamDebug/constant/Constant.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'FeedModel.dart';
 
 class LandingScreen extends StatefulWidget {
@@ -44,67 +45,86 @@ class Landing extends State<LandingScreen> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(
-          'Recipes',
+          'Home',
           style: new TextStyle(
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.amber,
         elevation: 5.0,
       ),
       body: SingleChildScrollView(
           child: Container(
               child: Column(
-          children: <Widget>[
-              ...feeds.map((item) {
-              return _getItemUI(context, item);
+        children: <Widget>[
+          ...feeds.map((item) {
+            return _getItemUI(context, item);
           })
         ],
       ))),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => CreateRecipeScreen()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => CreateRecipeScreen()));
         },
-        child: Icon(Icons.add,),
-        backgroundColor: Colors.pink,
+        child: Icon(
+          Icons.add,
+        ),
+        backgroundColor: Colors.amber,
       ),
     );
   }
 
   Widget _getItemUI(BuildContext context, FeedModel feedModel) {
-    return new Card(
-        child: new Column(
-      children: <Widget>[
-        new CachedNetworkImage(
-          width: double.infinity,
-          fit: BoxFit.cover,
-          height: 300,
-          imageUrl: feedModel.photo,
-          placeholder: (context, url) => new Image.asset('assets/images/image.png'),
-          /*errorWidget: (context, url, error) => new Icon(Icons.error)*/
-        ),
-        new ListTile(
-          leading: new Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              new Text(feedModel.name,
-                  style: new TextStyle(
-                      fontSize: 20.0, fontWeight: FontWeight.bold)),
-              new Text(feedModel.firstName + " " + feedModel.lastName,
-                  style: new TextStyle(
-                      fontSize: 15.0, fontWeight: FontWeight.normal))
-            ],
-          ),
-          onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => LandingDetailScreen(feedModel.recipeId)),
-            );
-            //_showSnackBar(context, feeds[index]);
-          },
-        ),
-      ],
-    ));
+    return new GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => LandingDetailScreen(feedModel.recipeId)),
+          );
+        },
+        child: new Card(
+            child: new Column(
+          children: <Widget>[
+            Container(
+              height: 250,
+              child: CachedNetworkImage(
+                width: double.infinity,
+                fit: BoxFit.cover,
+                height: 250,
+                imageUrl: feedModel.photo,
+                placeholder: (context, url) =>
+                    new Image.asset('assets/images/image.png'),
+                /*errorWidget: (context, url, error) => new Icon(Icons.error)*/
+              ),
+            ),
+            new ListTile(
+              leading: new Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  new Text(feedModel.name,
+                      style: new TextStyle(
+                          fontSize: 20.0, fontWeight: FontWeight.bold)),
+                  new Text(feedModel.firstName + " " + feedModel.lastName,
+                      style: new TextStyle(
+                          fontSize: 15.0, fontWeight: FontWeight.normal))
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          LandingDetailScreen(feedModel.recipeId)),
+                );
+                //_showSnackBar(context, feeds[index]);
+              },
+            ),
+          ],
+        )));
   }
 
   _showSnackBar(BuildContext context, FeedModel item) {
