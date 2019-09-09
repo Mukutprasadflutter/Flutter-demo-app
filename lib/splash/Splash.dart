@@ -6,12 +6,30 @@ import 'package:TeamDebug/constant/Constant.dart';
 import 'package:TeamDebug/login/Login.dart';
 
 class SplashScreen extends StatefulWidget {
+  static String tag = 'spash-page';
   @override
   Splash createState() => new Splash();
 }
 
 class Splash extends State<SplashScreen> {
-  startTime() async {
+  final routes = <String, WidgetBuilder>{
+    Login.tag: (context) => Login(),
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'My Recipes 1!!',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.lightBlue,
+        fontFamily: 'Nunito',
+      ),
+      home: Login(),
+      routes: routes,
+    );
+  }
+  /*startTime() async {
     var _duration = new Duration(seconds: 3);
     return new Timer(_duration, navigationPage);
   }
@@ -20,7 +38,8 @@ class Splash extends State<SplashScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => Login()),
-    );  }
+    );
+  }
 
   @override
   void initState() {
@@ -30,12 +49,6 @@ class Splash extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    /*return new Scaffold(
-      body: new Stack(
-        fit: StackFit.passthrough,
-        children: <Widget>[new Image.asset('assets/images/ic_background.jpg')],
-      ),
-    );*/
     return new Scaffold(
       appBar: null,
       body: new Container(
@@ -49,12 +62,13 @@ class Splash extends State<SplashScreen> {
             child: new BackdropFilter(
               filter: new ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
               child: new Container(
-                child: Text("My Recipes!!", style: new TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold))
-              ),
+                  child: Text("My Recipes!!",
+                      style: new TextStyle(
+                          fontSize: 30.0, fontWeight: FontWeight.bold))),
             ),
           ),
         ),
       ),
     );
-  }
+  }*/
 }

@@ -8,12 +8,90 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
+  static String tag = 'login-page';
+
   @override
-  _Login createState() => _Login();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _Login extends State<Login> {
-  BuildContext _ctx;
+class _LoginPageState extends State<Login> {
+  @override
+  Widget build(BuildContext context) {
+    final logo = Hero(
+      tag: 'hero',
+      child: CircleAvatar(
+        backgroundColor: Colors.transparent,
+        radius: 48.0,
+        child: Image.asset('assets/images/logo.png'),
+      ),
+    );
+
+    final email = TextFormField(
+      keyboardType: TextInputType.emailAddress,
+      autofocus: false,
+      initialValue: 'jm1@example.com',
+      decoration: InputDecoration(
+        hintText: 'Email',
+        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+      ),
+    );
+
+    final password = TextFormField(
+      autofocus: false,
+      initialValue: 'jay@123',
+      obscureText: true,
+      decoration: InputDecoration(
+        hintText: 'Password',
+        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0), borderSide: BorderSide(color: Colors.blue)),
+      ),
+    );
+
+    final loginButton = Padding(
+      padding: EdgeInsets.symmetric(vertical: 16.0),
+      child: RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        onPressed: () {
+          print('mame');
+          Navigator.of(context).pushNamed(LandingScreen.tag);
+        },
+        padding: EdgeInsets.all(12),
+        color: Colors.amber,
+        child: Text('Log In', style: TextStyle(color: Colors.white)),
+      ),
+    );
+
+    /*final forgotLabel = FlatButton(
+      child: Text(
+        'Forgot password?',
+        style: TextStyle(color: Colors.black54),
+      ),
+      onPressed: () {},
+    );*/
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: ListView(
+          shrinkWrap: true,
+          padding: EdgeInsets.only(left: 24.0, right: 24.0),
+          children: <Widget>[
+            logo,
+            SizedBox(height: 48.0),
+            email,
+            SizedBox(height: 8.0),
+            password,
+            SizedBox(height: 24.0),
+            loginButton
+          ],
+        ),
+      ),
+    );
+  }
+/*BuildContext _ctx;
   bool _isLoading = false;
   final formKey = new GlobalKey<FormState>();
   var _password = TextEditingController(text: "jay@123");
@@ -26,12 +104,15 @@ class _Login extends State<Login> {
     var loginBtn = new SizedBox(
         width: double.infinity,
         child: new Container(
+            width: 320.0,
+            height: 60.0,
+            alignment: FractionalOffset.center,
             child: new RaisedButton(
-          onPressed: () => _submit(context),
-          textColor: Colors.white,
-          child: new Text("LOGIN"),
-          color: Colors.black54,
-        )));
+              onPressed: () => _submit(context),
+              textColor: Colors.white,
+              child: new Text("LOGIN"),
+              color: Colors.black54,
+            )));
     var loginForm = new Column(
       children: <Widget>[
         new Container(
@@ -151,5 +232,5 @@ class _Login extends State<Login> {
     );
 
     scaffoldKey.currentState.showSnackBar(objSnackbar);
-  }
+  }*/
 }

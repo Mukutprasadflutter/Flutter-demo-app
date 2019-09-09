@@ -104,7 +104,6 @@ class CreateRecipe extends State<CreateRecipeScreen> {
             new Padding(
               padding: const EdgeInsets.all(8.0),
               child: new TextFormField(
-                obscureText: true,
                 controller: _preparationTime,
                 decoration: new InputDecoration(labelText: "Preparation Time"),
               ),
@@ -112,7 +111,6 @@ class CreateRecipe extends State<CreateRecipeScreen> {
             new Padding(
               padding: const EdgeInsets.all(8.0),
               child: new TextFormField(
-                obscureText: true,
                 controller: _serves,
                 decoration: new InputDecoration(labelText: "Serves"),
               ),
@@ -120,7 +118,6 @@ class CreateRecipe extends State<CreateRecipeScreen> {
             new Padding(
               padding: const EdgeInsets.all(8.0),
               child: new TextFormField(
-                obscureText: true,
                 controller: _complexity,
                 decoration: new InputDecoration(labelText: "Complexity"),
               ),

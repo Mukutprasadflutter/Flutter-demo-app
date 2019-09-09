@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'FeedModel.dart';
 
 class LandingScreen extends StatefulWidget {
+  static String tag = 'landing-page';
   @override
   Landing createState() => new Landing();
 }
