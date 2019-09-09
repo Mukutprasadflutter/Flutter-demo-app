@@ -67,13 +67,11 @@ class _LoginPageState extends State<Login> {
       ),
     );
 
-    final progress = Container(
-      height: 50,
-      width: 50,
-      child: new CircularProgressIndicator(
-          valueColor: new AlwaysStoppedAnimation(Colors.blue),
-          strokeWidth: 3.0),
-    );
+    final progress = Padding(
+        padding: EdgeInsets.symmetric(vertical: 16.0),
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation(Colors.amber),
+        ));
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -88,7 +86,7 @@ class _LoginPageState extends State<Login> {
             SizedBox(height: 8.0),
             password,
             SizedBox(height: 24.0),
-            _isLoading ? progress : loginButton
+            _isLoading ? Center(child: progress) : Center(child: loginButton)
           ],
         ),
       ),
@@ -99,7 +97,6 @@ class _LoginPageState extends State<Login> {
     setState(() {
       _isLoading = true;
     });
-
     Map<String, String> headers = {"Content-type": "application/json"};
     String jsonReq = "{\"email\": \"" +
         _username.text +
@@ -107,10 +104,9 @@ class _LoginPageState extends State<Login> {
         _password.text +
         "\"}";
     Response response = await post(LOGIN_API, headers: headers, body: jsonReq);
-    int statusCode = response.statusCode;
     String body = response.body;
     Map data = json.decode(body);
-    if (statusCode == 200) {
+    if (response.statusCode == 200) {
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('token', data['token'].toString());
       _isLoading = false;
@@ -131,111 +127,6 @@ class _LoginPageState extends State<Login> {
       content: new Text("$message"),
       backgroundColor: Colors.black,
     );
-
     scaffoldKey.currentState.showSnackBar(objSnackbar);
   }
-
-
-  /*BuildContext _ctx;
-  bool _isLoading = false;
-  final formKey = new GlobalKey<FormState>();
-  var _password = TextEditingController(text: "jay@123");
-  var _username = TextEditingController(text: "jm1@example.com");
-  final scaffoldKey = new GlobalKey<ScaffoldState>();
-
-  @override
-  Widget build(BuildContext context) {
-    _ctx = context;
-    var loginBtn = new SizedBox(
-        width: double.infinity,
-        child: new Container(
-            width: 320.0,
-            height: 60.0,
-            alignment: FractionalOffset.center,
-            child: new RaisedButton(
-              onPressed: () => _submit(context),
-              textColor: Colors.white,
-              child: new Text("LOGIN"),
-              color: Colors.black54,
-            )));
-    var loginForm = new Column(
-      children: <Widget>[
-        new Container(
-          child: new Text(
-            "Welcome To My Recipes!!",
-            textScaleFactor: 2.0,
-            textAlign: TextAlign.center,
-          ),
-          margin: EdgeInsets.all(10),
-        ),
-        new Form(
-          key: formKey,
-          child: new Column(
-            children: <Widget>[
-              new Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: new TextFormField(
-                  controller: _username,
-                  validator: (val) {
-                    return val.length < 10
-                        ? "Username must have atleast 10 chars"
-                        : null;
-                  },
-                  decoration: new InputDecoration(labelText: "Username"),
-                ),
-              ),
-              new Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: new TextFormField(
-                  obscureText: true,
-                  controller: _password,
-                  decoration: new InputDecoration(labelText: "Password"),
-                ),
-              ),
-            ],
-          ),
-        ),
-        new Container(
-          margin: EdgeInsets.all(10),
-          child: _isLoading
-              ? new SizedBox(
-                  child: new CircularProgressIndicator(
-                      valueColor: new AlwaysStoppedAnimation(Colors.blue),
-                      strokeWidth: 3.0),
-                  height: 20.0,
-                  width: 20.0,
-                )
-              : loginBtn,
-        )
-      ],
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-    );
-
-    return new Scaffold(
-      appBar: null,
-      key: scaffoldKey,
-      body: new Container(
-        decoration: new BoxDecoration(
-          image: new DecorationImage(
-              image: new AssetImage("assets/images/ic_background.jpg"),
-              fit: BoxFit.cover),
-        ),
-        child: new Center(
-          child: new ClipRect(
-            child: new BackdropFilter(
-              filter: new ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-              child: new Container(
-                child: loginForm,
-                height: 320.0,
-                width: 300.0,
-                decoration: new BoxDecoration(
-                    color: Colors.grey.shade200.withOpacity(0.5)),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }*/
 }
