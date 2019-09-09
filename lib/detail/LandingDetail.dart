@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:TeamDebug/Constant/Constant.dart';
+import 'package:TeamDebug/constant/Constant.dart';
 import 'package:TeamDebug/detail/FeedDetail.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';

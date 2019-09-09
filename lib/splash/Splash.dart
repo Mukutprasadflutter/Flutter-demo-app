@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:TeamDebug/Constant/Constant.dart';
+import 'package:TeamDebug/constant/Constant.dart';
 import 'package:TeamDebug/login/Login.dart';
 
 class SplashScreen extends StatefulWidget {

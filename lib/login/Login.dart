@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:TeamDebug/Constant/Constant.dart';
-import 'package:TeamDebug/Landing/Landing.dart';
+import 'package:TeamDebug/constant/Constant.dart';
+import 'package:TeamDebug/landing/Landing.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
