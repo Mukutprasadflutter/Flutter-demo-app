@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:TeamDebug/landing/Landing.dart';
 import 'package:TeamDebug/login/Login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   static String tag = 'spash-page';
@@ -18,11 +20,20 @@ class Splash extends State<SplashScreen> {
     return Timer(_duration, navigationPage);
   }
 
-  void navigationPage() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => Login()),
-    );
+  void navigationPage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token') ?? "";
+    if(token.isEmpty){
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      );
+    }else{
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LandingScreen()),
+      );
+    }
   }
 
   @override

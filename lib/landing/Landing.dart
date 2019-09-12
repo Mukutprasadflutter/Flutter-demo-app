@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:TeamDebug/constant/Constant.dart';
 import 'package:TeamDebug/createRecipes/CreateRecipeScreen.dart';
 import 'package:TeamDebug/detail/LandingDetail.dart';
+import 'package:TeamDebug/login/Login.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class LandingScreen extends StatefulWidget {
 
 class Landing extends State<LandingScreen> {
   var feeds = new List<FeedModel>();
+  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -45,36 +47,30 @@ class Landing extends State<LandingScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text(
-          'Home',
-          style: new TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        centerTitle: true,
+        actions: getActions(),
+        title: getTitle(),
+        centerTitle: false,
         backgroundColor: Colors.amber,
         elevation: 5.0,
       ),
       body: SingleChildScrollView(
           child: Container(
               child: Column(
-        children: <Widget>[
-          ...feeds.map((item) {
-            return _getItemUI(context, item);
+                children: <Widget>[
+                ...feeds.map((item) {
+                  return _getItemUI(context, item);
           })
         ],
       ))),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => CreateRecipeScreen()));
-        },
-        child: Icon(
-          Icons.add,
-        ),
-        backgroundColor: Colors.amber,
-      ),
+      bottomNavigationBar: getBottomNavigation(),
+      floatingActionButton: getFloatingActionButton(),
     );
+  }
+
+  void onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
   }
 
   Widget _getItemUI(BuildContext context, FeedModel feedModel) {
@@ -134,5 +130,67 @@ class Landing extends State<LandingScreen> {
       backgroundColor: Colors.black,
     );
     Scaffold.of(context).showSnackBar(objSnackbar);
+  }
+
+  void _logOut() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('token', "");
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => Login()),
+    );
+  }
+
+  getBottomNavigation() {
+    return  BottomNavigationBar(
+      onTap: onTabTapped, // new
+      currentIndex: _currentIndex, // new
+      items: [
+        new BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          title: Text('Home'),
+        ),
+        new BottomNavigationBarItem(
+            icon: Icon(Icons.person), title: Text('Profile'))
+      ],
+    );
+  }
+
+  getTitle() {
+    return Text(
+      'Home',
+      style: new TextStyle(
+        color: Colors.white,
+      ),
+    );
+  }
+
+  getActions() {
+   return <Widget>[
+      FlatButton(
+        child: Container(
+          padding: const EdgeInsets.all(20.0),
+          child: Text("Logout",
+              style: TextStyle(color: Colors.white),
+              textAlign: TextAlign.center),
+        ),
+        onPressed: () {
+          _logOut();
+        },
+      )
+    ];
+  }
+
+  getFloatingActionButton() {
+   return FloatingActionButton(
+      onPressed: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => CreateRecipeScreen()));
+      },
+      child: Icon(
+        Icons.add,
+      ),
+      backgroundColor: Colors.amber,
+    );
   }
 }

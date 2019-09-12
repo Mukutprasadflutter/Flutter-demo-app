@@ -53,26 +53,33 @@ class _LoginPageState extends State<Login> {
       ),
     );
 
-    final loginButton = Padding(
-      padding: EdgeInsets.symmetric(vertical: 16.0),
-      child: RaisedButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
+    final loginButton = SizedBox(
+      height: 70,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 16.0),
+        child: RaisedButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          onPressed: () {
+            _submit(context);
+          },
+          color: Colors.amber,
+          child: Text('Log In', style: TextStyle(color: Colors.white)),
         ),
-        onPressed: () {
-          _submit(context);
-        },
-        padding: EdgeInsets.all(12),
-        color: Colors.amber,
-        child: Text('Log In', style: TextStyle(color: Colors.white)),
       ),
     );
 
-    final progress = Padding(
-        padding: EdgeInsets.symmetric(vertical: 16.0),
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation(Colors.amber),
-        ));
+    final progress = Center(
+      child:SizedBox(
+          child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.0),
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(Colors.amber),
+              ))
+      ),
+    );
+
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -88,7 +95,7 @@ class _LoginPageState extends State<Login> {
             SizedBox(height: 8.0),
             password,
             SizedBox(height: 24.0),
-            _isLoading ? Center(child: progress) : Center(child: loginButton)
+            _isLoading ? progress : loginButton
           ],
         ),
       ),
