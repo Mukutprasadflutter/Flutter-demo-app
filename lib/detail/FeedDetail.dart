@@ -25,7 +25,7 @@ class FeedDetail {
 
   factory FeedDetail.fromJson(Map<String, dynamic> json) {
     return FeedDetail(
-      complexity: json['complexity']!= null ? json['complexity'] : "",
+      complexity: json['complexity'] != null ? json['complexity'] : "",
       firstName: json['firstName'] != null ? json['firstName'] : "",
       ingredients: json['ingredients'] != null
           ? (json['ingredients'] as List)
@@ -40,8 +40,9 @@ class FeedDetail {
       lastName: json['lastName'] != null ? json['lastName'] : "",
       name: json['name'] != null ? json['name'] : "",
       photo: json['photo'] != null ? json['photo'] : "",
-      preparationTime: json['preparationTime']!= null ? (json['preparationTime']) : "",
-      serves: json['serves']!= null ? (json['serves']) : "",
+      preparationTime:
+          json['preparationTime'] != null ? (json['preparationTime']) : "",
+      serves: json['serves'] != null ? (json['serves']) : "",
     );
   }
 

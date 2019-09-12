@@ -85,18 +85,17 @@ class LandingDetail extends State<LandingDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                width:double.infinity,
-               height: 200,
-               child: CachedNetworkImage(
-                   width: double.infinity,
-                   fit: BoxFit.cover,
-                   height: 150,
-                   imageUrl: feedDetail.photo == null ? "" : feedDetail.photo,
-                   placeholder: (context, url) =>
-                   new Image.asset('assets/images/image.png')),
+                width: double.infinity,
+                height: 200,
+                child: CachedNetworkImage(
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    height: 150,
+                    imageUrl: feedDetail.photo == null ? "" : feedDetail.photo,
+                    placeholder: (context, url) =>
+                        new Image.asset('assets/images/image.png')),
               ),
-
-              Row (
+              Row(
                 children: <Widget>[
                   Text(feedDetail.name != null ? feedDetail.name : "",
                       style: new TextStyle(

@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:TeamDebug/splash/Splash.dart';
-import 'package:TeamDebug/login/Login.dart';
+import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,7 +11,7 @@ class MyApp extends StatelessWidget {
       title: 'TeamDebug',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.amber,
       ),
       home: SplashScreen(),
     );

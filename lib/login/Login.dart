@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
+
 import 'package:TeamDebug/constant/Constant.dart';
 import 'package:TeamDebug/landing/Landing.dart';
 import 'package:flutter/material.dart';
@@ -75,6 +76,7 @@ class _LoginPageState extends State<Login> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      key: scaffoldKey,
       body: Center(
         child: ListView(
           shrinkWrap: true,

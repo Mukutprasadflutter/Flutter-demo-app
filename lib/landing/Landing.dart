@@ -13,6 +13,7 @@ import 'FeedModel.dart';
 
 class LandingScreen extends StatefulWidget {
   static String tag = 'landing-page';
+
   @override
   Landing createState() => new Landing();
 }
