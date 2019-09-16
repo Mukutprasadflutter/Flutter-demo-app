@@ -93,7 +93,7 @@ class LandingDetail extends State<LandingDetailScreen> {
                     height: 150,
                     imageUrl: feedDetail.photo == null ? "" : feedDetail.photo,
                     placeholder: (context, url) =>
-                        new Image.asset('assets/images/image.png')),
+                        new Image.asset('assets/images/placeholder.jpg')),
               ),
               Row(
                 children: <Widget>[

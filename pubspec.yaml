@@ -25,6 +25,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   shared_preferences: ^0.4.2
   cached_network_image: ^1.1.1
+  image_picker_modern: ^0.4.12+2
 
 dev_dependencies:
   flutter_test:
@@ -54,6 +55,7 @@ flutter:
   - assets/images/video.png
   - assets/images/logo.png
   - assets/images/ic_switch_off.png
+  - assets/images/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

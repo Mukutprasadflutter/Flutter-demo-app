@@ -1,12 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class MyHomePage extends StatefulWidget {
+class ProfileScreen extends StatefulWidget {
   @override
-  _MyHomePageState createState() => new _MyHomePageState();
+  ProfileView createState() => new ProfileView();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class ProfileView extends State<ProfileScreen> {
+  var firstName ="";
+  var lastName ="";
+
+
+  Future<Null> getSharedPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      firstName = prefs.getString('firstName') ?? "";
+      lastName = prefs.getString('lastName') ?? "";
+    });
+  }
+
+  @override
+  void initState() {
+    getSharedPrefs();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -18,39 +37,43 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Positioned(
                 width: 350.0,
-                top: MediaQuery.of(context).size.height / 5,
+                top: MediaQuery
+                    .of(context)
+                    .size
+                    .height / 5,
                 child: Column(
                   children: <Widget>[
                     Container(
                         width: 150.0,
                         height: 150.0,
                         decoration: BoxDecoration(
-                            color: Colors.red,
+                            color: Colors.black.withOpacity(0.8),
                             image: DecorationImage(
                                 image: NetworkImage(
-                                    'https://pixel.nymag.com/imgs/daily/vulture/2017/06/14/14-tom-cruise.w700.h700.jpg'),
+                                    'http://hotprintdesign.com/wp-content/uploads/2019/02/Sani-Sebastian.png'),
                                 fit: BoxFit.cover),
-                            borderRadius: BorderRadius.all(Radius.circular(75.0)),
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(75.0)),
                             boxShadow: [
-                              BoxShadow(blurRadius: 7.0, color: Colors.black)
+                              BoxShadow(blurRadius: 7.0, color: Colors.black.withOpacity(0.8))
                             ])),
-                    SizedBox(height: 90.0),
+                    SizedBox(height: 30.0),
                     Text(
-                      'Tom Cruise',
+                     firstName+" "+ lastName,
                       style: TextStyle(
                           fontSize: 30.0,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Montserrat'),
                     ),
-                    SizedBox(height: 15.0),
+                    /*SizedBox(height: 15.0),
                     Text(
                       'Subscribe guys',
                       style: TextStyle(
                           fontSize: 17.0,
                           fontStyle: FontStyle.italic,
                           fontFamily: 'Montserrat'),
-                    ),
-                    SizedBox(height: 25.0),
+                    ),*/
+                    /*SizedBox(height: 25.0),
                     Container(
                         height: 30.0,
                         width: 95.0,
@@ -68,15 +91,15 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                           ),
-                        )),
-                    SizedBox(height: 25.0),
+                        )),*/
+                    /*SizedBox(height: 25.0),
                     Container(
                         height: 30.0,
-                        width: 95.0,
+                        width: 200.0,
                         child: Material(
                           borderRadius: BorderRadius.circular(20.0),
-                          shadowColor: Colors.redAccent,
-                          color: Colors.red,
+                          shadowColor: Colors.black,
+                          color: Colors.amber,
                           elevation: 7.0,
                           child: GestureDetector(
                             onTap: () {},
@@ -87,14 +110,17 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                           ),
-                        ))
+                        ))*/
                   ],
                 ))
           ],
         ));
   }
-}
 
+  getName() async {
+
+  }
+}
 class getClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {

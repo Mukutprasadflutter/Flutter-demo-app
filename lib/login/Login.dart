@@ -118,6 +118,8 @@ class _LoginPageState extends State<Login> {
     if (response.statusCode == 200) {
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('token', data['token'].toString());
+      prefs.setString('firstName', data['firstName'].toString());
+      prefs.setString('lastName', data['lastName'].toString());
       _isLoading = false;
       Navigator.pushReplacement(
         context,
