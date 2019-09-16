@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:ui';
-
+import 'dart:math';
 import 'package:TeamDebug/constant/Constant.dart';
 import 'package:TeamDebug/landing/Landing.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vector_math/vector_math_64.dart';
+
 
 class Login extends StatefulWidget {
   static String tag = 'login-page';
@@ -14,7 +16,10 @@ class Login extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<Login> {
+class _LoginPageState extends State<Login> with SingleTickerProviderStateMixin {
+  AnimationController animationController;
+  Animation<double> animation;
+
   bool _isLoading = false;
   final formKey = new GlobalKey<FormState>();
   var _password = TextEditingController(text: "jay@123");
@@ -22,12 +27,35 @@ class _LoginPageState extends State<Login> {
   final scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
+  void initState() {
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 10),
+    )..addListener(() => setState(() {}));
+
+    animation = Tween<double>(begin: 50.0, end: 120.0).animate(animationController);
+
+    animationController.forward();
+    super.initState();
+  }
+
+  Vector3 _shake() {
+    double progress = animationController.value;
+    double offset = sin(progress * pi * 10.0);
+    return Vector3(offset * 10, 0.0, 0.0);
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     final logo = CircleAvatar(
       backgroundColor: Colors.transparent,
       radius: 48.0,
-      child: Image.asset('assets/images/logo.png'),
-    );
+      child:Center(
+        child:  Transform(
+            transform: Matrix4.translation(_shake()),child: Image.asset('assets/images/logo.png')),
+      ),
+      );
 
     final email = TextFormField(
       keyboardType: TextInputType.emailAddress,
@@ -101,6 +129,8 @@ class _LoginPageState extends State<Login> {
       ),
     );
   }
+
+
 
   Future _submit(BuildContext context) async {
     setState(() {
