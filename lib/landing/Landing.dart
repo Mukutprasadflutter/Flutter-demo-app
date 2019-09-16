@@ -1,19 +1,22 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:path/path.dart';
-import 'package:async/async.dart';
+
 import 'package:TeamDebug/constant/Constant.dart';
 import 'package:TeamDebug/createRecipes/CreateRecipeScreen.dart';
 import 'package:TeamDebug/detail/LandingDetail.dart';
 import 'package:TeamDebug/login/Login.dart';
 import 'package:TeamDebug/profile/ProfileScreen.dart';
+import 'package:async/async.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:image_picker_modern/image_picker_modern.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:image_picker_modern/image_picker_modern.dart';
+import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'FeedModel.dart';
 
 class LandingScreen extends StatefulWidget {
@@ -28,8 +31,7 @@ class Landing extends State<LandingScreen> {
   int _currentIndex = 0;
   bool _isLoading = false;
   final scaffoldKey = new GlobalKey<ScaffoldState>();
-  File _image;
-  
+
   @override
   void initState() {
     _makeGetRequest();
@@ -50,14 +52,14 @@ class Landing extends State<LandingScreen> {
       body: _currentIndex == 0 ? getScrollView(context) : getProfileView(),
       bottomNavigationBar: getBottomNavigation(),
       floatingActionButton:
-      _currentIndex == 0 ? getFloatingActionButton(context) : null,
+          _currentIndex == 0 ? getFloatingActionButton(context) : null,
     );
   }
 
   Widget _getItemUI(BuildContext context, FeedModel feedModel) {
     return new GestureDetector(
         onTap: () {
-          openDetailScreen(feedModel,context);
+          openDetailScreen(feedModel, context);
         },
         child: new Card(
             child: new Column(
@@ -67,26 +69,29 @@ class Landing extends State<LandingScreen> {
                   height: 200,
                   width: double.infinity,
                   child: Stack(children: <Widget>[
-                    CachedNetworkImage(
-                      width: double.infinity,
-                      fit: BoxFit.fitWidth,
-                      height: 200,
-                      imageUrl: feedModel.photo,
-                      placeholder: (context, url) => new Image.asset(
-                        'assets/images/placeholder.jpg',
+                    SizedBox(
+                      child: CachedNetworkImage(
+                        width: double.infinity,
                         fit: BoxFit.fitWidth,
+                        height: 200,
+                        imageUrl: feedModel.photo,
+                        placeholder: (context, url) => new Image.asset(
+                          'assets/images/placeholder.jpg',
+                          fit: BoxFit.fitWidth,
+                        ),
                       ),
+                      width: double.infinity,
                     ),
                     GestureDetector(
-                      child:Align(
+                      child: Align(
                         alignment: Alignment.topRight,
                         child: GestureDetector(
                           child: Icon(
                             Icons.edit,
                             color: Colors.white,
                           ),
-                          onTap: (){
-                            getImage(feedModel.recipeId);
+                          onTap: () {
+                            getImage(feedModel.recipeId, feedModel);
                           },
                         ),
                       ),
@@ -101,13 +106,13 @@ class Landing extends State<LandingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
+                    padding: EdgeInsets.fromLTRB(0, 1, 0, 1),
                     child: Text(feedModel.name,
                         style: new TextStyle(
                             fontSize: 20.0, fontWeight: FontWeight.bold)),
                   ),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
+                    padding: EdgeInsets.fromLTRB(0, 1, 0, 1),
                     child: Text(feedModel.firstName + " " + feedModel.lastName,
                         style: new TextStyle(
                             fontSize: 15.0, fontWeight: FontWeight.normal)),
@@ -236,7 +241,7 @@ class Landing extends State<LandingScreen> {
         _isLoading = false;
       });
     }
-    _showStringSnackBar(context, data['msg'].toString());
+    _showStringSnackBar(data['msg'].toString());
   }
 
   void postUnlike(FeedModel feedModel, BuildContext context) async {
@@ -258,7 +263,7 @@ class Landing extends State<LandingScreen> {
         _isLoading = false;
       });
     }
-    _showStringSnackBar(context, data['msg'].toString());
+    _showStringSnackBar(data['msg'].toString());
   }
 
   //=========================================SNACK BAR===========================================
@@ -270,7 +275,7 @@ class Landing extends State<LandingScreen> {
     scaffoldKey.currentState.showSnackBar(objSnackbar);
   }
 
-  _showStringSnackBar(BuildContext context, String item) {
+  _showStringSnackBar(String item) {
     final SnackBar objSnackbar = new SnackBar(
       content: new Text("${item}"),
       backgroundColor: Colors.black,
@@ -279,7 +284,7 @@ class Landing extends State<LandingScreen> {
   }
 
   //=========================================Click Events========================================
-  void openDetailScreen(FeedModel feedModel,BuildContext context) {
+  void openDetailScreen(FeedModel feedModel, BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -324,44 +329,49 @@ class Landing extends State<LandingScreen> {
     return ProfileScreen();
   }
 
-  void getImage(int recipeId) async {
+  void getImage(int recipeId, FeedModel feedModel) async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _image = image;
-    });
-    uploadImage(image,recipeId);
+    uploadImage(image, recipeId, feedModel);
   }
 
-  uploadImage(File imageFile, int recipeId) async {
-    var stream = new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+  uploadImage(File imageFile, int recipeId, FeedModel feedModel) async {
+    var stream =
+        new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
     var length = await imageFile.length();
 
-    var uri = Uri.parse("http://35.160.197.175:3006/api/v1/recipe/add-update-recipe-photo");
+    var uri = Uri.parse(ADD_RECIPE_IMAGE_API);
 
     var request = new http.MultipartRequest("POST", uri);
 
-    var multipartFile = new http.MultipartFile('photo', stream, length, filename: basename(imageFile.path));
+    var multipartFile = new http.MultipartFile('photo', stream, length,
+        filename: basename(imageFile.path),
+        contentType: new MediaType('image', 'png'));
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token') ?? "";
-    Map<String, String> headers = {
-      "Authorization": "Bearer " + token
-    };
-
+    Map<String, String> headers = {"Authorization": "Bearer " + token};
     request.headers.addAll(headers);
     request.files.add(multipartFile);
     request.fields['recipeId'] = recipeId.toString();
-//    var response = await request.send();
-//    print("VALUE==>$response.statusCode");
-//    response.stream.transform(utf8.decoder).listen((value) {
-//      print("VALUE==>"+value);
-//    });
+    var response = await request.send();
+    print("VALUE==>$response.statusCode");
+    response.stream.transform(utf8.decoder).listen((value) {
+      Map data = json.decode(value);
+      if (response.statusCode == 200) {
+        setState(() {
+          feedModel.photo = data['photo'].toString();
+        });
+      }
+      _showStringSnackBar(data['msg'].toString());
+      print("VALUE==>" + value);
+    });
 
-
-    var postUri = uri;
+    /*  var postUri = uri;
     var _request = new http.MultipartRequest("POST", postUri);
     _request.headers.addAll(headers);
     _request.fields['recipeId'] = recipeId.toString();
-    _request.files.add(new http.MultipartFile.fromBytes('photo', await File.fromUri(Uri.parse(imageFile.path)).readAsBytes()));
+    var filePart = new http.MultipartFile.fromBytes('photo', await File.fromUri(Uri.parse(imageFile.path)).readAsBytes());
+    filePart.contentType=(new MediaType('image', 'png'));
+    _request.files.add();
 
     _request.send().then((response) {
       if (response.statusCode == 200) {
@@ -369,6 +379,6 @@ class Landing extends State<LandingScreen> {
       }else{
         print(response.reasonPhrase);
       }
-    });
+    });*/
   }
 }

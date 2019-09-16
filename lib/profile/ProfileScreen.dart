@@ -49,14 +49,10 @@ class ProfileView extends State<ProfileScreen> {
                         decoration: BoxDecoration(
                             color: Colors.black.withOpacity(0.8),
                             image: DecorationImage(
-                                image: NetworkImage(
-                                    'http://hotprintdesign.com/wp-content/uploads/2019/02/Sani-Sebastian.png'),
+                                image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/768px-Circle-icons-profile.svg.png'),
                                 fit: BoxFit.cover),
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(75.0)),
-                            boxShadow: [
-                              BoxShadow(blurRadius: 7.0, color: Colors.black.withOpacity(0.8))
-                            ])),
+                            borderRadius: BorderRadius.all(Radius.circular(75.0)),
+                            boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black.withOpacity(0.8))])),
                     SizedBox(height: 30.0),
                     Text(
                      firstName+" "+ lastName,

@@ -95,11 +95,18 @@ class LandingDetail extends State<LandingDetailScreen> {
                     placeholder: (context, url) =>
                         new Image.asset('assets/images/placeholder.jpg')),
               ),
-              Row(
+              Column(
                 children: <Widget>[
-                  Text(feedDetail.name != null ? feedDetail.name : "",
-                      style: new TextStyle(
+                  Text("Title",
+                      style: new TextStyle(backgroundColor: Colors.amber,
                           fontSize: 20.0, fontWeight: FontWeight.bold)),
+                  Row(
+                    children: <Widget>[
+                      Text(feedDetail.name != null ? feedDetail.name : "",
+                          style: new TextStyle(
+                              fontSize: 20.0, fontWeight: FontWeight.bold)),
+                    ],
+                  )
                 ],
               ),
               new Text(
