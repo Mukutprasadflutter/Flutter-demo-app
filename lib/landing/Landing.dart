@@ -266,6 +266,37 @@ class Landing extends State<LandingScreen> {
     _showStringSnackBar(data['msg'].toString());
   }
 
+  uploadImage(File imageFile, int recipeId, FeedModel feedModel) async {
+    var stream =
+    new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+    var length = await imageFile.length();
+
+    var uri = Uri.parse(ADD_RECIPE_IMAGE_API);
+
+    var request = new http.MultipartRequest("POST", uri);
+
+    var multipartFile = new http.MultipartFile('photo', stream, length,
+        filename: basename(imageFile.path),
+        contentType: new MediaType('image', 'png'));
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token') ?? "";
+    Map<String, String> headers = {"Authorization": "Bearer " + token};
+    request.headers.addAll(headers);
+    request.files.add(multipartFile);
+    request.fields['recipeId'] = recipeId.toString();
+    var response = await request.send();
+    print("VALUE==>$response.statusCode");
+    response.stream.transform(utf8.decoder).listen((value) {
+      Map data = json.decode(value);
+      if (response.statusCode == 200) {
+        setState(() {
+          feedModel.photo = data['photo'].toString();
+        });
+      }
+      _showStringSnackBar(data['msg'].toString());
+      print("VALUE==>" + value);
+    });
+  }
   //=========================================SNACK BAR===========================================
   _showSnackBar(BuildContext context, FeedModel item) {
     final SnackBar objSnackbar = new SnackBar(
@@ -334,51 +365,4 @@ class Landing extends State<LandingScreen> {
     uploadImage(image, recipeId, feedModel);
   }
 
-  uploadImage(File imageFile, int recipeId, FeedModel feedModel) async {
-    var stream =
-        new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
-    var length = await imageFile.length();
-
-    var uri = Uri.parse(ADD_RECIPE_IMAGE_API);
-
-    var request = new http.MultipartRequest("POST", uri);
-
-    var multipartFile = new http.MultipartFile('photo', stream, length,
-        filename: basename(imageFile.path),
-        contentType: new MediaType('image', 'png'));
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token') ?? "";
-    Map<String, String> headers = {"Authorization": "Bearer " + token};
-    request.headers.addAll(headers);
-    request.files.add(multipartFile);
-    request.fields['recipeId'] = recipeId.toString();
-    var response = await request.send();
-    print("VALUE==>$response.statusCode");
-    response.stream.transform(utf8.decoder).listen((value) {
-      Map data = json.decode(value);
-      if (response.statusCode == 200) {
-        setState(() {
-          feedModel.photo = data['photo'].toString();
-        });
-      }
-      _showStringSnackBar(data['msg'].toString());
-      print("VALUE==>" + value);
-    });
-
-    /*  var postUri = uri;
-    var _request = new http.MultipartRequest("POST", postUri);
-    _request.headers.addAll(headers);
-    _request.fields['recipeId'] = recipeId.toString();
-    var filePart = new http.MultipartFile.fromBytes('photo', await File.fromUri(Uri.parse(imageFile.path)).readAsBytes());
-    filePart.contentType=(new MediaType('image', 'png'));
-    _request.files.add();
-
-    _request.send().then((response) {
-      if (response.statusCode == 200) {
-        print("Uploaded!");
-      }else{
-        print(response.reasonPhrase);
-      }
-    });*/
-  }
 }
