@@ -22,7 +22,7 @@ class LandingDetail extends State<LandingDetailScreen> {
 
   int feedId = 0;
   bool apiCall = false;
-  String imageUrl = 'https://picsum.photos/id/102/4320/3240';
+  String imageUrl = 'https://platerate.com/images/tempfoodnotext.png';
   FeedDetail feedDetail = new FeedDetail();
 
   LandingDetail(int id) {
@@ -47,7 +47,7 @@ class LandingDetail extends State<LandingDetailScreen> {
       setState(() {
         feedDetail = FeedDetail.fromJson(json.decode(response.body));
         print('$feedDetail');
-        imageUrl = feedDetail.photo == null ? 'https://picsum.photos/250?image=9' : feedDetail.photo ;
+        imageUrl = (feedDetail.photo == null||feedDetail.photo=="") ? imageUrl : feedDetail.photo ;
         print(imageUrl);
         apiCall = true;
       });
@@ -68,7 +68,7 @@ class LandingDetail extends State<LandingDetailScreen> {
         automaticallyImplyLeading: true,
         elevation: 5.0,
       ),
-      body: SafeArea(child: Column(
+      body: apiCall?SafeArea(child: Column(
         children: <Widget>[
           Image.network(imageUrl,
             fit: BoxFit.cover,
@@ -78,11 +78,11 @@ class LandingDetail extends State<LandingDetailScreen> {
           ),
           ListTile(
             title: Text(
-              'Created By '+ feedDetail.firstName + ' ' +  feedDetail.lastName,
-              style: TextStyle(fontWeight: FontWeight.bold)),
+                'Created By '+ feedDetail.firstName + ' ' +  feedDetail.lastName,
+                style: TextStyle(fontWeight: FontWeight.bold)),
           ),
           ListTile(
-              title: Text('Ingredient which are used for ' + feedDetail.name,
+            title: Text('Ingredient which are used for ' + feedDetail.name,
               style: TextStyle(fontStyle: FontStyle.italic),),
           ),
           ListTile(
@@ -93,6 +93,8 @@ class LandingDetail extends State<LandingDetailScreen> {
           ),
         ],
       ),
+      ):Center(
+        child: CircularProgressIndicator(),
       )
     );
   }
