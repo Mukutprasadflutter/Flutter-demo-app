@@ -58,7 +58,7 @@ class LandingDetail extends State<LandingDetailScreen> {
   }
 
   getScrollView(BuildContext context) {
-    Container(
+    return Container(
         child: Column(
       children: <Widget>[
         ...feedDetail.ingredients.map((item) {
@@ -69,7 +69,7 @@ class LandingDetail extends State<LandingDetailScreen> {
   }
 
   getScrollViewInstruction(BuildContext context) {
-    Container(
+    return Container(
         child: Column(
       children: <Widget>[
         ...feedDetail.instructions.map((item) {
@@ -81,36 +81,180 @@ class LandingDetail extends State<LandingDetailScreen> {
 
   Widget _getItemUI(BuildContext context, Ingredient ingredient) {
     return new GestureDetector(
-        child: new Card(
-            child: new ListTile(
-                leading: new Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 1, 0, 1),
-            child: Text(ingredient.ingredient,
-                style:
-                    new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+      child: Flex(
+        direction: Axis.horizontal,
+        children: <Widget>[
+          Flexible(
+            fit: FlexFit.tight,
+            flex: 1,
+            child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.50,
+                child: Container(
+                  color: Colors.black12,
+                  child: new Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(10, 5, 1, 1),
+                            child: Row(
+                              children: <Widget>[
+                                Bullet(""),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(ingredient.ingredient.toUpperCase(),
+                                    style: new TextStyle(fontSize: 18.0))
+                              ],
+                            ),
+                          ),
+                        ),
+                      ]),
+                )),
           ),
-        ]))));
+        ],
+      ),
+    );
   }
 
   Widget _getItemUIInstruction(BuildContext context, Instruction ingredient) {
     return new GestureDetector(
-        child: new Card(
-            child: new ListTile(
-                leading: new Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 1, 0, 1),
-            child: Text(ingredient.instruction,
-                style:
-                    new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+      child: Flex(
+        direction: Axis.horizontal,
+        children: <Widget>[
+          Flexible(
+            fit: FlexFit.tight,
+            flex: 1,
+            child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.50,
+                child: Container(
+                  color: Colors.black12,
+                  child: new Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(10, 5, 1, 1),
+                          child: Row(
+                            children: <Widget>[
+                              Bullet(""),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(ingredient.instruction.toUpperCase(),
+                                  style: new TextStyle(fontSize: 18.0))
+                            ],
+                          ),
+                        ),
+                      ]),
+                )),
           ),
-        ]))));
+        ],
+      ),
+    );
+  }
+
+  Widget _getItemUIComplexityType(
+      BuildContext context, String complex, String time, String serves) {
+    return new Container(
+      color: Colors.black12,
+      child: Flex(
+        direction: Axis.horizontal,
+        children: <Widget>[
+          Flexible(
+            fit: FlexFit.tight,
+            flex: 1,
+            child: Center(
+                child: Container(
+              child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(1, 5, 1, 1),
+                        child: Center(
+                          child: Text("Complexity",
+                              style: new TextStyle(fontSize: 15.0)),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(1, 2, 1, 5),
+                        child: Center(
+                          child: Text(complex,
+                              style: new TextStyle(fontSize: 18.0)),
+                        ),
+                      ),
+                    )
+                  ]),
+            )),
+          ),
+          Flexible(
+            fit: FlexFit.tight,
+            flex: 1,
+            child: Center(
+                child: Container(
+              child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(1, 5, 1, 1),
+                        child: Center(
+                          child: Text("Time",
+                              style: new TextStyle(fontSize: 15.0)),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(1, 2, 1, 5),
+                        child: Center(
+                          child:
+                              Text(time, style: new TextStyle(fontSize: 18.0)),
+                        ),
+                      ),
+                    )
+                  ]),
+            )),
+          ),
+          Flexible(
+            fit: FlexFit.tight,
+            flex: 1,
+            child: Center(
+                child: Container(
+              child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(1, 5, 1, 1),
+                        child: Center(
+                          child: Text("Serves",
+                              style: new TextStyle(fontSize: 15.0)),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(1, 2, 1, 5),
+                        child: Center(
+                          child: Text(serves,
+                              style: new TextStyle(fontSize: 18.0)),
+                        ),
+                      ),
+                    )
+                  ]),
+            )),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -128,8 +272,8 @@ class LandingDetail extends State<LandingDetailScreen> {
           elevation: 5.0,
         ),
         body: apiCall
-            ? SingleChildScrollView(
-                child: SafeArea(
+            ? SafeArea(
+                child: SingleChildScrollView(
                   child: Column(
                     children: <Widget>[
                       Image.network(
@@ -139,35 +283,89 @@ class LandingDetail extends State<LandingDetailScreen> {
                         width: double.infinity,
                         alignment: Alignment.center,
                       ),
-                      ListTile(
-                        title: Text(
-                            'Created By ' +
-                                feedDetail.firstName +
-                                ' ' +
-                                feedDetail.lastName,
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ),
-                      ListTile(
-                        title: Text(
-                          'Ingredient which are used for ' + feedDetail.name,
-                          style: TextStyle(fontStyle: FontStyle.italic),
+                      Center(
+                        child: Container(
+                          height: 40,
+                          color: Colors.black54,
+                          child: Center(
+                            child: Text(
+                              feedDetail.name,
+                              style: TextStyle(
+                                  fontStyle: FontStyle.normal,
+                                  fontSize: 18,
+                                  color: Colors.white),
+                            ),
+                          ),
                         ),
                       ),
-                      feedDetail.instructions!=null&&feedDetail.instructions.isNotEmpty?getScrollView(context):null,
-                      ListTile(
-                        title: Text(
-                          'Instruction which are used for ' + feedDetail.name,
-                          style: TextStyle(fontStyle: FontStyle.italic),
+                      _getItemUIComplexityType(context, feedDetail.complexity,
+                          feedDetail.preparationTime, feedDetail.serves),
+                      Container(
+                        child: SizedBox(
+                          height: 10,
                         ),
                       ),
-                      //getScrollViewInstruction(context),
-                      ListTile(
-                        title: Text('Complexity: ' + feedDetail.complexity,
-                            style: TextStyle(fontWeight: FontWeight.normal)),
+                      Center(
+                        child: Container(
+                          height: 40,
+                          color: Colors.black54,
+                          child: Center(
+                            child: Text(
+                              'Ingredient',
+                              style: TextStyle(
+                                  fontStyle: FontStyle.normal,
+                                  fontSize: 18,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ),
                       ),
-                      ListTile(
-                        title: Text('Type: ' + feedDetail.complexity,
-                            style: TextStyle(fontWeight: FontWeight.normal)),
+                      feedDetail.ingredients != null &&
+                              feedDetail.ingredients.isNotEmpty
+                          ? getScrollView(context)
+                          : null,
+                      Container(
+                        child: SizedBox(
+                          height: 10,
+                        ),
+                      ),
+                      Center(
+                        child: Container(
+                            height: 40,
+                            color: Colors.black54,
+                            child: Center(
+                              child: Text(
+                                'Instruction',
+                                style: TextStyle(
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: 18,
+                                    color: Colors.white),
+                              ),
+                            )),
+                      ),
+                      feedDetail.instructions != null &&
+                              feedDetail.instructions.isNotEmpty
+                          ? getScrollViewInstruction(context)
+                          : null,
+                      Container(
+                        child: SizedBox(
+                          height: 10,
+                        ),
+                      ),
+                      Center(
+                        child: Container(
+                          height: 180,
+                          color: Colors.black12,
+                          child: Center(
+                            child: Text(
+                                'Created By ' +
+                                    feedDetail.firstName +
+                                    ' ' +
+                                    feedDetail.lastName,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15)),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -177,4 +375,32 @@ class LandingDetail extends State<LandingDetailScreen> {
                 child: CircularProgressIndicator(),
               ));
   }
+}
+
+class Bullet extends Text {
+  const Bullet(
+    String data, {
+    Key key,
+    TextStyle style,
+    TextAlign textAlign,
+    TextDirection textDirection,
+    Locale locale,
+    bool softWrap,
+    TextOverflow overflow,
+    double textScaleFactor,
+    int maxLines,
+    String semanticsLabel,
+  }) : super(
+          '•',
+          key: key,
+          style: style,
+          textAlign: textAlign,
+          textDirection: textDirection,
+          locale: locale,
+          softWrap: softWrap,
+          overflow: overflow,
+          textScaleFactor: textScaleFactor,
+          maxLines: maxLines,
+          semanticsLabel: semanticsLabel,
+        );
 }
