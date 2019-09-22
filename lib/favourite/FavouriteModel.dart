@@ -16,7 +16,7 @@ class FavouriteModel {
             firstName: json['firstName'], 
             lastName: json['lastName'], 
             name: json['name'], 
-            photo: json['photo'] != null ? (json['photo']) : null,
+            photo: json['photo'] != null ? (json['photo']) : "",
             preparationTime: json['preparationTime'], 
             recipeId: json['recipeId'], 
             serves: json['serves'], 

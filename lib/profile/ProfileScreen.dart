@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -10,6 +11,7 @@ class ProfileScreen extends StatefulWidget {
 class ProfileView extends State<ProfileScreen> {
   var firstName ="";
   var lastName ="";
+  final RefreshController _refreshController = RefreshController();
 
 
   Future<Null> getSharedPrefs() async {
@@ -29,39 +31,46 @@ class ProfileView extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        body: new Stack(
-          children: <Widget>[
-            ClipPath(
-              child: Container(color: Colors.black.withOpacity(0.8)),
-              clipper: getClipper(),
-            ),
-            Positioned(
-                width: 350.0,
-                top: MediaQuery
-                    .of(context)
-                    .size
-                    .height / 5,
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                        width: 150.0,
-                        height: 150.0,
-                        decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.8),
-                            image: DecorationImage(
-                                image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/768px-Circle-icons-profile.svg.png'),
-                                fit: BoxFit.cover),
-                            borderRadius: BorderRadius.all(Radius.circular(75.0)),
-                            boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black.withOpacity(0.8))])),
-                    SizedBox(height: 30.0),
-                    Text(
-                     firstName+" "+ lastName,
-                      style: TextStyle(
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Montserrat'),
-                    ),
-                    /*SizedBox(height: 15.0),
+        body: SmartRefresher(
+          controller: _refreshController,
+          enablePullDown: true,
+          onRefresh: () async {
+            await Future.delayed(Duration(seconds: 1));
+            _refreshController.refreshCompleted();
+          },
+          child: new Stack(
+            children: <Widget>[
+              ClipPath(
+                child: Container(color: Colors.black.withOpacity(0.8)),
+                clipper: getClipper(),
+              ),
+              Positioned(
+                  width: 350.0,
+                  top: MediaQuery
+                      .of(context)
+                      .size
+                      .height / 5,
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                          width: 150.0,
+                          height: 150.0,
+                          decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.8),
+                              image: DecorationImage(
+                                  image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/768px-Circle-icons-profile.svg.png'),
+                                  fit: BoxFit.cover),
+                              borderRadius: BorderRadius.all(Radius.circular(75.0)),
+                              boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black.withOpacity(0.8))])),
+                      SizedBox(height: 30.0),
+                      Text(
+                        firstName+" "+ lastName,
+                        style: TextStyle(
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Montserrat'),
+                      ),
+                      /*SizedBox(height: 15.0),
                     Text(
                       'Subscribe guys',
                       style: TextStyle(
@@ -69,7 +78,7 @@ class ProfileView extends State<ProfileScreen> {
                           fontStyle: FontStyle.italic,
                           fontFamily: 'Montserrat'),
                     ),*/
-                    /*SizedBox(height: 25.0),
+                      /*SizedBox(height: 25.0),
                     Container(
                         height: 30.0,
                         width: 95.0,
@@ -88,7 +97,7 @@ class ProfileView extends State<ProfileScreen> {
                             ),
                           ),
                         )),*/
-                    /*SizedBox(height: 25.0),
+                      /*SizedBox(height: 25.0),
                     Container(
                         height: 30.0,
                         width: 200.0,
@@ -107,9 +116,10 @@ class ProfileView extends State<ProfileScreen> {
                             ),
                           ),
                         ))*/
-                  ],
-                ))
-          ],
+                    ],
+                  ))
+            ],
+          ),
         ));
   }
 

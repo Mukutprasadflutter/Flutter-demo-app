@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:TeamDebug/constant/Constant.dart';
 import 'package:TeamDebug/createRecipes/CreateRecipeScreen.dart';
 import 'package:TeamDebug/detail/LandingDetail.dart';
+import 'package:TeamDebug/favourite/FavouriteModel.dart';
 import 'package:TeamDebug/login/Login.dart';
 import 'package:TeamDebug/profile/ProfileScreen.dart';
 import 'package:async/async.dart';
@@ -15,6 +16,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker_modern/image_picker_modern.dart';
 import 'package:path/path.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'FeedModel.dart';
@@ -28,9 +30,12 @@ class LandingScreen extends StatefulWidget {
 
 class Landing extends State<LandingScreen> {
   var feeds = new List<FeedModel>();
+  var favouriteList = new List<FavouriteModel>();
   int _currentIndex = 0;
   bool _isLoading = false;
   final scaffoldKey = new GlobalKey<ScaffoldState>();
+  final RefreshController _refreshController = RefreshController();
+  final RefreshController _refreshSecondController = RefreshController();
 
   @override
   void initState() {
@@ -49,7 +54,7 @@ class Landing extends State<LandingScreen> {
         backgroundColor: Colors.amber,
         elevation: 5.0,
       ),
-      body: _currentIndex == 0 ? getScrollView(context) : getProfileView(),
+      body: getBody(context),
       bottomNavigationBar: getBottomNavigation(),
       floatingActionButton:
           _currentIndex == 0 ? getFloatingActionButton(context) : null,
@@ -155,6 +160,67 @@ class Landing extends State<LandingScreen> {
         )));
   }
 
+  Widget _getFavouriteItemUI(BuildContext context, FavouriteModel feedModel) {
+    return new GestureDetector(
+        onTap: () {
+          openDetailFromFavScreen(feedModel, context);
+        },
+        child: new Card(
+            child: new Column(
+          children: <Widget>[
+            FlatButton(
+                child: Container(
+                  height: 200,
+                  width: double.infinity,
+                  child: Stack(children: <Widget>[
+                    SizedBox(
+                      child: CachedNetworkImage(
+                        width: double.infinity,
+                        fit: BoxFit.fitWidth,
+                        height: 200,
+                        imageUrl: feedModel.photo,
+                        placeholder: (context, url) => new Image.asset(
+                          'assets/images/placeholder.jpg',
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ),
+                      width: double.infinity,
+                    ),
+                  ]),
+                ),
+                onPressed: () {}),
+            new ListTile(
+              leading: new Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 1, 0, 1),
+                    child: Text(feedModel.name,
+                        style: new TextStyle(
+                            fontSize: 20.0, fontWeight: FontWeight.bold)),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 1, 0, 1),
+                    child: Text(feedModel.firstName + " " + feedModel.lastName,
+                        style: new TextStyle(
+                            fontSize: 15.0, fontWeight: FontWeight.normal)),
+                  )
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          LandingDetailScreen(feedModel.recipeId)),
+                );
+              },
+            ),
+          ],
+        )));
+  }
+
   getBottomNavigation() {
     return BottomNavigationBar(
       onTap: onTabTapped, // new
@@ -164,6 +230,8 @@ class Landing extends State<LandingScreen> {
           icon: Icon(Icons.home),
           title: Text('Home'),
         ),
+        new BottomNavigationBarItem(
+            icon: Icon(Icons.favorite), title: Text('Favourite')),
         new BottomNavigationBarItem(
             icon: Icon(Icons.person), title: Text('Profile'))
       ],
@@ -215,11 +283,54 @@ class Landing extends State<LandingScreen> {
     Response response = await get(FEED_API, headers: headers);
     int statusCode = response.statusCode;
     if (statusCode == 200) {
+      _makeGetFavouriteRequest();
       setState(() {
         Iterable list = json.decode(response.body);
         feeds = list.map((model) => FeedModel.fromJson(model)).toList();
       });
     }
+  }
+
+  _makeGetFavouriteRequest() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token') ?? "";
+    Map<String, String> headers = {"Authorization": "Bearer " + token};
+    Response response = await get(COOKING_LIST_API, headers: headers);
+    int statusCode = response.statusCode;
+    if (statusCode == 200) {
+      setState(() {
+        Iterable list = json.decode(response.body);
+        favouriteList =
+            list.map((model) => FavouriteModel.fromJson(model)).toList();
+      });
+    }
+  }
+
+  uploadImage(File imageFile, int recipeId, FeedModel feedModel) async {
+    var stream =
+        new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+    var length = await imageFile.length();
+    var uri = Uri.parse(ADD_RECIPE_IMAGE_API);
+    var request = new http.MultipartRequest("POST", uri);
+    var multipartFile = new http.MultipartFile('photo', stream, length,
+        filename: basename(imageFile.path),
+        contentType: new MediaType('image', 'png'));
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token') ?? "";
+    Map<String, String> headers = {"Authorization": "Bearer " + token};
+    request.headers.addAll(headers);
+    request.files.add(multipartFile);
+    request.fields['recipeId'] = recipeId.toString();
+    var response = await request.send();
+    response.stream.transform(utf8.decoder).listen((value) {
+      Map data = json.decode(value);
+      if (response.statusCode == 200) {
+        setState(() {
+          feedModel.photo = data['photo'].toString();
+        });
+      }
+      _showStringSnackBar(data['msg'].toString());
+    });
   }
 
   void postLike(FeedModel feedModel, BuildContext context) async {
@@ -266,37 +377,6 @@ class Landing extends State<LandingScreen> {
     _showStringSnackBar(data['msg'].toString());
   }
 
-  uploadImage(File imageFile, int recipeId, FeedModel feedModel) async {
-    var stream =
-    new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
-    var length = await imageFile.length();
-
-    var uri = Uri.parse(ADD_RECIPE_IMAGE_API);
-
-    var request = new http.MultipartRequest("POST", uri);
-
-    var multipartFile = new http.MultipartFile('photo', stream, length,
-        filename: basename(imageFile.path),
-        contentType: new MediaType('image', 'png'));
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token') ?? "";
-    Map<String, String> headers = {"Authorization": "Bearer " + token};
-    request.headers.addAll(headers);
-    request.files.add(multipartFile);
-    request.fields['recipeId'] = recipeId.toString();
-    var response = await request.send();
-    print("VALUE==>$response.statusCode");
-    response.stream.transform(utf8.decoder).listen((value) {
-      Map data = json.decode(value);
-      if (response.statusCode == 200) {
-        setState(() {
-          feedModel.photo = data['photo'].toString();
-        });
-      }
-      _showStringSnackBar(data['msg'].toString());
-      print("VALUE==>" + value);
-    });
-  }
   //=========================================SNACK BAR===========================================
   _showSnackBar(BuildContext context, FeedModel item) {
     final SnackBar objSnackbar = new SnackBar(
@@ -316,6 +396,14 @@ class Landing extends State<LandingScreen> {
 
   //=========================================Click Events========================================
   void openDetailScreen(FeedModel feedModel, BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => LandingDetailScreen(feedModel.recipeId)),
+    );
+  }
+
+  void openDetailFromFavScreen(FavouriteModel feedModel, BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -345,15 +433,23 @@ class Landing extends State<LandingScreen> {
 
   //=================================================Main Views===================================
   getScrollView(BuildContext context) {
-    return SingleChildScrollView(
-        child: Container(
-            child: Column(
-      children: <Widget>[
-        ...feeds.map((item) {
-          return _getItemUI(context, item);
-        })
-      ],
-    )));
+    return  Container(
+        child:SmartRefresher(
+        controller: _refreshSecondController,
+        enablePullDown: true,
+        onRefresh: () async {
+          await Future.delayed(Duration(seconds: 1));
+          _makeGetRequest();
+          _refreshSecondController.refreshCompleted();
+        },
+        child: SingleChildScrollView(
+                child: Column(
+              children: <Widget>[
+              ...feeds.map((item) {
+              return _getItemUI(context, item);
+            })
+          ],
+        ))));
   }
 
   getProfileView() {
@@ -365,4 +461,34 @@ class Landing extends State<LandingScreen> {
     uploadImage(image, recipeId, feedModel);
   }
 
+  getBody(BuildContext context) {
+    if (_currentIndex == 0) {
+      return getScrollView(context);
+    } else if (_currentIndex == 1) {
+      return getFavourite(context);
+    } else {
+      return getProfileView();
+    }
+  }
+
+  getFavourite(BuildContext context) {
+    return SmartRefresher(
+        controller: _refreshController,
+        enablePullDown: true,
+        onRefresh: () async {
+          await Future.delayed(Duration(seconds: 1));
+          _makeGetFavouriteRequest();
+          _refreshController.refreshCompleted();
+        },
+        child: SingleChildScrollView(
+          child: Container(
+              child: Column(
+            children: <Widget>[
+              ...favouriteList.map((item) {
+                return _getFavouriteItemUI(context, item);
+              })
+            ],
+          )),
+        ));
+  }
 }
