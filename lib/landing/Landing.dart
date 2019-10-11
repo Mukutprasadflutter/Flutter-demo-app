@@ -7,6 +7,7 @@ import 'package:TeamDebug/detail/LandingDetail.dart';
 import 'package:TeamDebug/favourite/FavouriteModel.dart';
 import 'package:TeamDebug/login/Login.dart';
 import 'package:TeamDebug/profile/ProfileScreen.dart';
+import 'package:TeamDebug/search/SearchList.dart';
 import 'package:async/async.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -249,16 +250,23 @@ class Landing extends State<LandingScreen> {
 
   getActions(BuildContext context) {
     return <Widget>[
-      FlatButton(
-        child: Container(
-          padding: const EdgeInsets.all(20.0),
-          child: Text("Logout",
-              style: TextStyle(color: Colors.white),
-              textAlign: TextAlign.center),
+      GestureDetector(
+        child:Padding(
+          padding:  EdgeInsets.all(10.0),
+          child:  Align(
+            alignment: Alignment.center,
+            child: GestureDetector(
+              child: Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              onTap: () {
+  _search(context);
+              },
+            ),
+          ),
         ),
-        onPressed: () {
-          _logOut(context);
-        },
+        onTap: () {},
       )
     ];
   }
@@ -422,6 +430,13 @@ class Landing extends State<LandingScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => Login()),
+    );
+  }
+
+  void _search(BuildContext context) async {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => SearchList()),
     );
   }
 

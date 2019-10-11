@@ -1,3 +1,4 @@
+import 'package:TeamDebug/login/Login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -70,14 +71,17 @@ class ProfileView extends State<ProfileScreen> {
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Montserrat'),
                       ),
-                      /*SizedBox(height: 15.0),
-                    Text(
-                      'Subscribe guys',
-                      style: TextStyle(
-                          fontSize: 17.0,
-                          fontStyle: FontStyle.italic,
-                          fontFamily: 'Montserrat'),
-                    ),*/
+                      SizedBox(height: 15.0),
+                    FlatButton(
+                      onPressed: () {_logOut(context);},
+                      child: Text(
+                        'Logout',
+                        style: TextStyle(
+                            fontSize: 17.0,
+                            fontStyle: FontStyle.normal,
+                            fontFamily: 'Montserrat'),
+                      ),
+                    ),
                       /*SizedBox(height: 25.0),
                     Container(
                         height: 30.0,
@@ -125,6 +129,14 @@ class ProfileView extends State<ProfileScreen> {
 
   getName() async {
 
+  }
+  void _logOut(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('token', "");
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => Login()),
+    );
   }
 }
 class getClipper extends CustomClipper<Path> {

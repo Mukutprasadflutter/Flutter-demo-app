@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LandingDetailScreen extends StatefulWidget {
   int feedId = 0;
 
+
   LandingDetailScreen(int id) {
     feedId = id;
   }

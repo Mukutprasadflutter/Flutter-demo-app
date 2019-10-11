@@ -6,4 +6,5 @@ String ROOT = "http://35.160.197.175:3006",
     UNLIKE_API = ROOT + "/api/v1/recipe/rm-from-cooking-list",
     ADD_RECIPE_API = ROOT + "/api/v1/recipe/add",
     COOKING_LIST_API = ROOT + "/api/v1/recipe/cooking-list",
-    ADD_RECIPE_IMAGE_API = ROOT + "/api/v1/recipe/add-update-recipe-photo";
+    ADD_RECIPE_IMAGE_API = ROOT + "/api/v1/recipe/add-update-recipe-photo",
+    SEARCH_FEED_API = ROOT + "/api/v1/recipe/feeds?q=";
