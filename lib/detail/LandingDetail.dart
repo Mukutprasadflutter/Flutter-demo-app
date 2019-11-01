@@ -18,16 +18,16 @@ class LandingDetailScreen extends StatefulWidget {
   }
 
   @override
-  LandingDetail createState() => new LandingDetail(feedId);
+  _LandingDetailState createState() => new _LandingDetailState(feedId);
 }
 
-class LandingDetail extends State<LandingDetailScreen> {
+class _LandingDetailState extends State<LandingDetailScreen> {
   int feedId = 0;
   bool apiCall = false;
   String imageUrl = 'https://platerate.com/images/tempfoodnotext.png';
   FeedDetail feedDetail = new FeedDetail();
 
-  LandingDetail(int id) {
+  _LandingDetailState(int id) {
     feedId = id;
   }
 
@@ -277,9 +277,9 @@ class LandingDetail extends State<LandingDetailScreen> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: <Widget>[
-                      Image.network(
-                        imageUrl,
-                        fit: BoxFit.cover,
+                        Image.network(
+                          imageUrl,
+                          fit: BoxFit.cover,
                         height: 250,
                         width: double.infinity,
                         alignment: Alignment.center,
@@ -324,7 +324,7 @@ class LandingDetail extends State<LandingDetailScreen> {
                       feedDetail.ingredients != null &&
                               feedDetail.ingredients.isNotEmpty
                           ? getScrollView(context)
-                          : null,
+                          : Container(),
                       Container(
                         child: SizedBox(
                           height: 10,
@@ -347,7 +347,7 @@ class LandingDetail extends State<LandingDetailScreen> {
                       feedDetail.instructions != null &&
                               feedDetail.instructions.isNotEmpty
                           ? getScrollViewInstruction(context)
-                          : null,
+                          : Container(),
                       Container(
                         child: SizedBox(
                           height: 10,

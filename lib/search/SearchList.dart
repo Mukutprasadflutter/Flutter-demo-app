@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:TeamDebug/constant/Constant.dart';
+import 'package:TeamDebug/detail/LandingDetail.dart';
 import 'package:TeamDebug/landing/FeedModel.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -16,14 +17,13 @@ class SearchList extends StatefulWidget {
 
 class _SearchListState extends State<SearchList>
 {
-  Widget appBarTitle = new Text("Search Sample", style: new TextStyle(color: Colors.white),);
+  Widget appBarTitle = new Text("Search Recipe", style: new TextStyle(color: Colors.white),);
   Icon actionIcon = new Icon(Icons.search, color: Colors.white,);
   final key = new GlobalKey<ScaffoldState>();
   final TextEditingController _searchQuery = new TextEditingController();
-  List<String> _list = new List();
+  List<FeedModel> _list = new List();
   bool _IsSearching;
   String _searchText = "";
-  var feedsArray = new List<FeedModel>();
 
   _SearchListState() {
     _searchQuery.addListener(() {
@@ -70,7 +70,7 @@ class _SearchListState extends State<SearchList>
            for (int i = 0; i < feeds.length; i++) {
              String  name = feeds.elementAt(i).name;
              if (name.toLowerCase().contains(_searchText.toLowerCase())) {
-               _list.add(name);
+               _list.add(feeds.elementAt(i));
              }
            }
          });
@@ -96,14 +96,8 @@ class _SearchListState extends State<SearchList>
   }
 
   List<ChildItem> _buildSearchList() {
-    if (_searchText.isEmpty) {
-      return _list.map((contact) => new ChildItem(contact))
-          .toList();
-    }
-    else {
-        return _list.map((contact) => new ChildItem(contact))
-          .toList();
-    }
+    return _list.map((contact) => new ChildItem(contact))
+        .toList();
   }
 
   Widget buildBar(BuildContext context) {
@@ -157,11 +151,19 @@ class _SearchListState extends State<SearchList>
 }
 
 class ChildItem extends StatelessWidget {
-  final String name;
-  ChildItem(this.name);
+  final FeedModel model;
+  ChildItem(this.model);
   @override
   Widget build(BuildContext context) {
-    return new ListTile(title: new Text(this.name));
+    return new ListTile(title: new Text(this.model.name),
+      onTap: () {
+      print("${model.recipeId} ===================");
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => LandingDetailScreen(model.recipeId)),
+      );
+    },);
   }
 
 }

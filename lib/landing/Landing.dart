@@ -434,7 +434,7 @@ class Landing extends State<LandingScreen> {
   }
 
   void _search(BuildContext context) async {
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => SearchList()),
     );
